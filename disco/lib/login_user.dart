@@ -5,37 +5,35 @@ import 'package:crypto/crypto.dart';
 import 'dart:io';
 
 void main(List<String> arguments) async {
-  final parser = ArgParser();
-
-  parser.addOption('username', abbr: 'u', help: 'ADD USER');
-
-  final parsed = parser.parse(arguments);
-
-  String username = parsed['username'] as String;
-  print(username);
-
   final db = await Db.create('mongodb://127.0.0.1:27017/testDB');
   await db.open();
   final collection = db.collection('users');
 
+  final parser = ArgParser();
+  parser.addOption('username', abbr: 'u', help: 'ADD USER');
+  final parsed = parser.parse(arguments);
+  String username = parsed['username'] as String;
+
   final user = await collection.findOne(where.match('username', username));
   if (user == null) {
+    print('User not found : failure');
+  } else {
     stdout.write("Enter password : ");
     var pass = stdin.readLineSync().toString();
     var hashedPass = hashPass(pass);
 
-    final document = {'username': username, 'hash': hashedPass};
-    final result = await collection
-        .insertOne(document..['_id'] = ObjectId().toHexString());
-    if (result.isAcknowledged) {
-      print('success');
-    } else {
-      print('failure');
+    while (user['hash'] != hashedPass) {
+      print('Incorrect password : failure');
+      stdout.write("Enter password : (enter q to exit) : ");
+      pass = stdin.readLineSync().toString();
+      if (pass == 'q') {
+        await db.close();
+        return;
+      }
+      hashedPass = hashPass(pass);
     }
-  } else {
-    print('User already present : failure');
+    print("User logged in successfully!");
   }
-
   await db.close();
 }
 
