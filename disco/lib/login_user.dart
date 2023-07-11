@@ -7,14 +7,15 @@ import 'dart:io';
 void main(List<String> arguments) async {
   final db = await Db.create('mongodb://127.0.0.1:27017/testDB');
   await db.open();
-  final collection = db.collection('users');
+  final users = db.collection('userAuth');
+  final userSessions = db.collection('user_sessions');
 
   final parser = ArgParser();
   parser.addOption('username', abbr: 'u', help: 'ADD USER');
   final parsed = parser.parse(arguments);
   String username = parsed['username'] as String;
 
-  final user = await collection.findOne(where.match('username', username));
+  final user = await users.findOne(where.match('username', username));
   if (user == null) {
     print('User not found : failure');
   } else {
@@ -32,7 +33,14 @@ void main(List<String> arguments) async {
       }
       hashedPass = hashPass(pass);
     }
-    print("User logged in successfully!");
+    final session = {'username': username, 'sessionToken': Uuid().v4()};
+    final result = await userSessions
+        .insertOne(session..['_id'] = ObjectId().toHexString());
+    if (result.isAcknowledged) {
+      print("User logged in successfully!");
+    } else {
+      print('failure');
+    }
   }
   await db.close();
 }

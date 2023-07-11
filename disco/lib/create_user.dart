@@ -16,17 +16,17 @@ void main(List<String> arguments) async {
 
   final db = await Db.create('mongodb://127.0.0.1:27017/testDB');
   await db.open();
-  final collection = db.collection('users');
+  final userAuth = db.collection('userAuth');
 
-  final user = await collection.findOne(where.match('username', username));
+  final user = await userAuth.findOne(where.match('username', username));
   if (user == null) {
     stdout.write("Enter password : ");
     var pass = stdin.readLineSync().toString();
     var hashedPass = hashPass(pass);
 
     final document = {'username': username, 'hash': hashedPass};
-    final result = await collection
-        .insertOne(document..['_id'] = ObjectId().toHexString());
+    final result =
+        await userAuth.insertOne(document..['_id'] = ObjectId().toHexString());
     if (result.isAcknowledged) {
       print('success');
     } else {
