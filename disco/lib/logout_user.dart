@@ -17,14 +17,14 @@ void main(List<String> arguments) async {
   stdin.echoMode = true;
   var hashedPass = hashPass(pass);
   if (user == null) {
-    print('No User Logged in!');
+    print('LogoutError : No User Logged in!');
   } else if (user['hash'] == hashedPass) {
     await userSessions.deleteMany({});
     print('Logout success');
 
     await db.close();
   } else {
-    print('Unsuccesful Logout Attempt');
+    print('LogoutError : Unsuccesful Logout Attempt');
     await db.close();
   }
 }

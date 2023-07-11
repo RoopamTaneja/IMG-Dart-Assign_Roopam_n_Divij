@@ -18,7 +18,7 @@ void main(List<String> arguments) async {
     final parsed = parser.parse(arguments);
     String username = parsed['username'] as String;
 
-    final user = await users.findOne(where.match('username', username));
+    final user = await users.findOne(where.eq('username', username));
     if (user == null) {
       print('User not found : failure');
     } else {
@@ -36,15 +36,15 @@ void main(List<String> arguments) async {
         if (result.isAcknowledged) {
           print("User logged in successfully!");
         } else {
-          print('Failure');
+          print('LoginError : Failure');
         }
       } else {
-        print('Incorrect Password');
+        print('LoginError : Incorrect Password');
       }
       await db.close();
     }
   } else {
-    print('Already Logged In');
+    print('DuplicacyError : Already Logged In');
     await db.close();
   }
 }

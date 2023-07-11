@@ -12,7 +12,7 @@ void main(List<String> arguments) async {
   final db = await Db.create('mongodb://127.0.0.1:27017/myDB');
   await db.open();
   final userAuth = db.collection('userAuth');
-  final user = await userAuth.findOne(where.match('username', username));
+  final user = await userAuth.findOne(where.eq('username', username));
 
   if (user == null) {
     stdout.write("Enter Password : ");
@@ -34,13 +34,13 @@ void main(List<String> arguments) async {
       if (result.isAcknowledged) {
         print('Succesfully Registered ');
       } else {
-        print('Unsuccessful Login');
+        print('LoginError : Unsuccessful Login');
       }
     } else {
-      print('Unsuccesful Login : Password do not Match');
+      print('LoginError :  Password do not Match');
     }
   } else {
-    print('User Already Exists');
+    print('DuplicacyError : User Already Exists');
   }
   await db.close();
 }
