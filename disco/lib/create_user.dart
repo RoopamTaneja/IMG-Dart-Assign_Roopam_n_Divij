@@ -52,6 +52,7 @@ void main(List<String> arguments) async {
     String username = currentSession['username'];
     print('DuplicacyError : $username already logged in');
   }
+
   await db.close();
 }
 
