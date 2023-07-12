@@ -14,7 +14,7 @@ Q) By now you must have tried doing something on the terminal. Maybe it was a `c
 This features are compulsory to have in your solution:
 
 - **Register a User:**
-Register(signup) a user with their username, If user is already registered, print `faliure`.
+Register(signup) a user with their username, If user is already registered, print `failure`.
 _Input example_: `register 2 user1 user2`
 _Expected output_: `success`
 
@@ -25,7 +25,7 @@ _Input Example_: `login 1 user1`
 _Expected output_: `login success`
 
 - **Logout users:** 
-Logout a user given their username. Make an Exception class on faliure and print it in the "above operation" followed format.
+Logout a user given their username. Make an Exception class on failure and print it in the "above operation" followed format.
 _Input Example_: `logout 1 user1`
 _Expected output_: `logout success`
 
