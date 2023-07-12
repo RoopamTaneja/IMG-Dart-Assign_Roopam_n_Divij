@@ -17,37 +17,44 @@ void main(List<String> arguments) async {
   } else {
     final parser = ArgParser();
     //add all parser options here for all fns
+    parser.addOption('owner',
+        abbr: 'o', help: 'COMMANDS ONLY ACCESSIBLE TO SERVER OWNER');
     parser.addOption('username', abbr: 'u', help: 'ADD USER');
     parser.addOption("server",
         abbr: "s", help: "CREATE SERVER/CHANNEL WITHIN SERVER");
 
     final parsed = parser.parse(arguments);
+    final command = parsed['owner'];
     final server = parsed['server'];
     final username = parsed['username'];
 
-    var checkMod = await servers
-        .find(where
-            .eq('serverName', server)
-            .eq('mods', currentSession['username']))
+    final currentUser =
+        await users.findOne(where.eq('username', currentSession['username']));
+    String userID = currentUser?['_id'];
+
+    var checkOwner = await servers
+        .find(where.eq('serverName', server).eq('userId', userID))
         .isEmpty;
 
-    if (checkMod) {
-      //u are not mod
-      print('Permission Denied : You are not a moderator of $server');
+    if (checkOwner) {
+      //u are not owner
+      print('Permission Denied : You are not the owner of $server');
     } else {
       //now call different fns and pass different values as per need
-      if (arguments[0] == "admit") {
-        admit(users, servers, server, username);
-      } else if (arguments[0] == "show") {
-        show(servers, server);
+      if (command == "addMod") {
+        addMod(users, servers, server, username);
+      } else if (command == "removeMod") {
+        removeMod(servers, server, username);
+      } else if (command == "showMod") {
+        showMods(servers, server);
       }
     }
   }
   db.close();
 }
 
-void show(DbCollection servers, server) async {
-  //dart bin/disco.dart show -s servername
+void showMods(DbCollection servers, server) async {
+  //dart bin/disco.dart sudo -o showMod -s servername
 
   var check = await servers.find(where.eq('serverName', server)).isEmpty;
 
@@ -57,16 +64,16 @@ void show(DbCollection servers, server) async {
   } else {
     //server exists
     var serverDoc = await servers.findOne(where.eq('serverName', server));
-    var arr = serverDoc?['inQueue'];
-    print('List of users waiting for approval to join : ');
+    var arr = serverDoc?['mods'];
+    print('List of moderators : ');
     for (String i in arr) {
       print(i);
     }
   }
 }
 
-void admit(DbCollection users, DbCollection servers, server, username) async {
-  //dart bin/disco.dart admit -u username -s servername
+void addMod(DbCollection users, DbCollection servers, server, username) async {
+  //dart bin/disco.dart sudo -o addMod -s servername -u username
 
   var check = await servers.find(where.eq('serverName', server)).isEmpty;
 
@@ -80,14 +87,12 @@ void admit(DbCollection users, DbCollection servers, server, username) async {
       print('User Not Found');
       return;
     } else {
-      //user also exists, so add him to allMembers list
-      final currentUser = await users.findOne(where.eq('username', username));
-      final userID = currentUser?['_id'];
-      servers.update(where.eq('serverName', server),
-          modify.push('allMembers', {username: userID}));
+      //user also exists, so add him to mods list
       servers.update(
-          where.eq('serverName', server), modify.pull('inQueue', username));
-      print("$username added as member of $server successfully.");
+          where.eq('serverName', server), modify.push('mods', username));
+      print("$username added as moderator of $server successfully.");
     }
   }
 }
+
+void removeMod(DbCollection servers, server, username) async {}
