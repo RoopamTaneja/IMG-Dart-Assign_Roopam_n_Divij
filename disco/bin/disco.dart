@@ -2,6 +2,8 @@ import 'package:disco/create_user.dart' as create_user;
 import 'package:disco/login_user.dart' as login;
 import 'package:disco/logout_user.dart' as logout;
 import 'package:disco/create.dart' as create;
+import 'package:disco/join.dart' as join;
+import 'package:disco/mod_rights.dart' as mod;
 
 void main(List<String> arguments) {
   if (arguments[0] == "register") {
@@ -15,5 +17,14 @@ void main(List<String> arguments) {
   }
   if (arguments[0] == "create") {
     create.main(arguments);
+  }
+  if (arguments[0] == "join") {
+    join.main(arguments);
+  }
+  if (arguments[0] == "admit") {
+    mod.main(arguments);
+  }
+  if (arguments[0] == "show") {
+    mod.main(arguments);
   }
 }

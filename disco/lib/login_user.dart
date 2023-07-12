@@ -33,7 +33,7 @@ void main(List<String> arguments) async {
         final result = await userSessions
             .insertOne(session..['_id'] = ObjectId().toHexString());
         if (result.isAcknowledged) {
-          print("User logged in successfully!");
+          print("$username logged in successfully!");
         } else {
           print('LoginError : Failure');
         }
