@@ -4,6 +4,7 @@ import 'package:disco/logout_user.dart' as logout;
 import 'package:disco/create.dart' as create;
 import 'package:disco/join.dart' as join;
 import 'package:disco/mod_rights.dart' as mod;
+import 'package:disco/sudo_rights.dart' as sudo;
 
 void main(List<String> arguments) {
   if (arguments[0] == "register") {
@@ -26,5 +27,8 @@ void main(List<String> arguments) {
   }
   if (arguments[0] == "show") {
     mod.main(arguments);
+  }
+  if (arguments[0] == "sudo") {
+    sudo.main(arguments);
   }
 }
