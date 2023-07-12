@@ -5,42 +5,45 @@ import 'package:crypto/crypto.dart';
 import 'dart:io';
 
 void main(List<String> arguments) async {
-  final db = await Db.create('mongodb://127.0.0.1:27017/testDB');
+  final db = await Db.create('mongodb://127.0.0.1:27017/myDB');
   await db.open();
   final users = db.collection('userAuth');
-  final userSessions = db.collection('user_sessions');
+  final userSessions = db.collection('userSession');
+  final currentSession = await userSessions.findOne();
 
-  final parser = ArgParser();
-  parser.addOption('username', abbr: 'u', help: 'ADD USER');
-  final parsed = parser.parse(arguments);
-  String username = parsed['username'] as String;
+  if (currentSession == null) {
+    final parser = ArgParser();
+    parser.addOption('username', abbr: 'u', help: 'LOGIN USER');
+    final parsed = parser.parse(arguments);
+    String username = parsed['username'] as String;
 
-  final user = await users.findOne(where.match('username', username));
-  if (user == null) {
-    print('User not found : failure');
-  } else {
-    stdout.write("Enter password : ");
-    var pass = stdin.readLineSync().toString();
-    var hashedPass = hashPass(pass);
-
-    while (user['hash'] != hashedPass) {
-      print('Incorrect password : failure');
-      stdout.write("Enter password : (enter q to exit) : ");
-      pass = stdin.readLineSync().toString();
-      if (pass == 'q') {
-        await db.close();
-        return;
-      }
-      hashedPass = hashPass(pass);
-    }
-    final session = {'username': username, 'sessionToken': Uuid().v4()};
-    final result = await userSessions
-        .insertOne(session..['_id'] = ObjectId().toHexString());
-    if (result.isAcknowledged) {
-      print("User logged in successfully!");
+    final user = await users.findOne(where.eq('username', username));
+    if (user == null) {
+      print('User not found : failure');
     } else {
-      print('failure');
+      stdout.write("Enter password : ");
+      stdin.echoMode = false;
+      var pass = stdin.readLineSync().toString();
+      print('');
+      stdin.echoMode = true;
+      var hashedPass = hashPass(pass);
+
+      if (user['hash'] == hashedPass) {
+        final session = {'username': username, 'sessionToken': Uuid().v4()};
+        final result = await userSessions
+            .insertOne(session..['_id'] = ObjectId().toHexString());
+        if (result.isAcknowledged) {
+          print("User logged in successfully!");
+        } else {
+          print('LoginError : Failure');
+        }
+      } else {
+        print('LoginError : Incorrect Password');
+      }
     }
+  } else {
+    String username = currentSession['username'];
+    print('DuplicacyError : $username already logged in');
   }
   await db.close();
 }

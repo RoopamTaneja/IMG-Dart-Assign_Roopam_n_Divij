@@ -1,23 +1,45 @@
-import 'package:args/args.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+import 'dart:io';
 
 void main(List<String> arguments) async {
-  final db = await Db.create('mongodb://127.0.0.1:27017/testDB');
+  final db = await Db.create('mongodb://127.0.0.1:27017/myDB');
   await db.open();
-  final userSessions = db.collection('user_sessions');
 
-  final parser = ArgParser();
-  parser.addOption('username', abbr: 'u', help: 'ADD USER');
-  final parsed = parser.parse(arguments);
-  String username = parsed['username'] as String;
+  final users = db.collection('userAuth');
+  final userSessions = db.collection('userSession');
+  final currentSession = await userSessions.findOne();
 
-  final userSession =
-      await userSessions.findOne(where.match('username', username));
-  if (userSession == null) {
-    print('User not logged in : failure');
+  if (currentSession != null) {
+    String username = currentSession['username'];
+    final user = await users.findOne(where.eq('username', username));
+
+    if (user != null) {
+      stdout.write("$username, enter your password to logout : ");
+      stdin.echoMode = false;
+      var pass = stdin.readLineSync().toString();
+      print('');
+      stdin.echoMode = true;
+      var hashedPass = hashPass(pass);
+      if (user['hash'] == hashedPass) {
+        await userSessions.deleteMany({});
+        print('Logout success');
+      } else {
+        print('LogoutError : Incorrect Password');
+      }
+    } else {
+      print('LogoutError : Unsuccesful Logout Attempt');
+    }
   } else {
-    await userSessions.remove(userSession);
-    print('logout success');
+    print('LogoutError : No User Logged in!');
   }
   await db.close();
+}
+
+String hashPass(String pass) {
+  var bytes = utf8.encode(pass);
+  var digest = sha256.convert(bytes);
+
+  return digest.toString();
 }
