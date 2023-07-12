@@ -9,11 +9,10 @@ void main(List<String> arguments) async {
   await db.open();
   final users = db.collection('userAuth');
   final userSessions = db.collection('userSession');
-  final active = await userSessions.count();
+  final currentSession = await userSessions.findOne();
 
-  if (active == 0) {
+  if (currentSession == null) {
     final parser = ArgParser();
-
     parser.addOption('username', abbr: 'u', help: 'LOGIN USER');
     final parsed = parser.parse(arguments);
     String username = parsed['username'] as String;
@@ -41,12 +40,12 @@ void main(List<String> arguments) async {
       } else {
         print('LoginError : Incorrect Password');
       }
-      await db.close();
     }
   } else {
-    print('DuplicacyError : Already Logged In');
-    await db.close();
+    String username = currentSession['username'];
+    print('DuplicacyError : $username already logged in');
   }
+  await db.close();
 }
 
 String hashPass(String pass) {

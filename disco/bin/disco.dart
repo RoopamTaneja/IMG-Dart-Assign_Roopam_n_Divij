@@ -1,5 +1,3 @@
-// #!/usr/bin/env dart
-
 import 'package:disco/create_user.dart' as create_user;
 import 'package:disco/login_user.dart' as login;
 import 'package:disco/logout_user.dart' as logout;

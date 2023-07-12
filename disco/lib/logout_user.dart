@@ -6,27 +6,35 @@ import 'dart:io';
 void main(List<String> arguments) async {
   final db = await Db.create('mongodb://127.0.0.1:27017/myDB');
   await db.open();
+
   final users = db.collection('userAuth');
   final userSessions = db.collection('userSession');
-  final user = await users.findOne();
+  final currentSession = await userSessions.findOne();
 
-  stdout.write("Enter password : ");
-  stdin.echoMode = false;
-  var pass = stdin.readLineSync().toString();
-  print('');
-  stdin.echoMode = true;
-  var hashedPass = hashPass(pass);
-  if (user == null) {
-    print('LogoutError : No User Logged in!');
-  } else if (user['hash'] == hashedPass) {
-    await userSessions.deleteMany({});
-    print('Logout success');
+  if (currentSession != null) {
+    String username = currentSession['username'];
+    final user = await users.findOne(where.eq('username', username));
 
-    await db.close();
+    if (user != null) {
+      stdout.write("$username, enter your password to logout : ");
+      stdin.echoMode = false;
+      var pass = stdin.readLineSync().toString();
+      print('');
+      stdin.echoMode = true;
+      var hashedPass = hashPass(pass);
+      if (user['hash'] == hashedPass) {
+        await userSessions.deleteMany({});
+        print('Logout success');
+      } else {
+        print('LogoutError : Incorrect Password');
+      }
+    } else {
+      print('LogoutError : Unsuccesful Logout Attempt');
+    }
   } else {
-    print('LogoutError : Unsuccesful Logout Attempt');
-    await db.close();
+    print('LogoutError : No User Logged in!');
   }
+  await db.close();
 }
 
 String hashPass(String pass) {
