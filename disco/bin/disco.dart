@@ -9,31 +9,35 @@ import 'package:disco/messages.dart' as messages;
 import 'package:disco/inbox.dart' as inbox;
 
 void main(List<String> arguments) {
-  if (arguments[0] == "register") {
-    create_user.main(arguments);
-  } else if (arguments[0] == "login") {
-    login.main(arguments);
-  } else if (arguments[0] == "logout") {
-    logout.main(arguments);
-  } else if (arguments[0] == "create") {
-    create.main(arguments);
-  } else if (arguments[0] == "join") {
-    join.main(arguments);
-  } else if (arguments[0] == "admit") {
-    mod.main(arguments);
-  } else if (arguments[0] == "showEntrants") {
-    mod.main(arguments);
-  } else if (arguments[0] == "showMods") {
-    mod.main(arguments);
-  } else if (arguments[0] == "remove") {
-    mod.main(arguments);
-  } else if (arguments[0] == "sudo") {
-    sudo.main(arguments);
-  } else if (arguments[0] == "message") {
-    messages.main(arguments);
-  } else if (arguments[0] == "inbox") {
-    inbox.main(arguments);
-  } else {
-    print("SyntaxError : No such command exists");
+  switch (arguments[0]) {
+    case "register":
+      create_user.main(arguments);
+      break;
+    case "login":
+      login.main(arguments);
+      break;
+    case "logout":
+      logout.main(arguments);
+      break;
+    case "create":
+      create.main(arguments);
+      break;
+    case "join":
+      join.main(arguments);
+      break;
+    case "remove":
+      mod.main(arguments);
+      break;
+    case "sudo":
+      sudo.main(arguments);
+      break;
+    case "message":
+      messages.main(arguments);
+      break;
+    case "inbox":
+      inbox.main(arguments);
+      break;
+    default:
+      print("SyntaxError : No such command exists");
   }
 }

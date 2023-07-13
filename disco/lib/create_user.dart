@@ -8,6 +8,7 @@ void main(List<String> arguments) async {
   //creating a new instance of the database server
   final db = await Db.create('mongodb://127.0.0.1:27017/myDB');
   await db.open();
+
   //checking for any instance of login from the database
   final userSessions = db.collection('userSession');
   final currentSession = await userSessions.findOne();
