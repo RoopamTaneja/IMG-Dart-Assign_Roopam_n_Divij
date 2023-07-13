@@ -6,6 +6,7 @@ import 'package:disco/join.dart' as join;
 import 'package:disco/mod_rights.dart' as mod;
 import 'package:disco/sudo_rights.dart' as sudo;
 import 'package:disco/messages.dart' as messages;
+import 'package:disco/inbox.dart' as inbox;
 
 void main(List<String> arguments) {
   if (arguments[0] == "register") {
@@ -34,5 +35,8 @@ void main(List<String> arguments) {
   }
   if (arguments[0] == "message") {
     messages.main(arguments);
+  }
+  if (arguments[0] == "inbox") {
+    inbox.main(arguments);
   }
 }
