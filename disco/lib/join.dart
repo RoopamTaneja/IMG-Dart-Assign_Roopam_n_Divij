@@ -30,7 +30,7 @@ void main(List<String> arguments) async {
 
     if (channel == null && server != null) {
       //only server name given
-      var serverMain = await servers.find(where.eq('serverName', server));
+      var serverMain = servers.find(where.eq('serverName', server));
       var check = await serverMain.isEmpty;
       if (check) {
         //server doesn't exist

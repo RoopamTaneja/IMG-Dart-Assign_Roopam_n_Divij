@@ -51,13 +51,15 @@ void main(List<String> arguments) async {
 void show(server) {
   //dart bin/disco.dart show -s servername
 
-  //server exists
-
-  var arr = server['inQueue'];
-
-  print('List of users waiting for approval to join : ');
-  for (String i in arr) {
-    print(i);
+  List arr = server['inQueue'];
+  if (arr.isEmpty) {
+    //if empty list
+    print('No users waiting for approval');
+  } else {
+    print('List of users waiting for approval to join : ');
+    for (String i in arr) {
+      print(i);
+    }
   }
 }
 
