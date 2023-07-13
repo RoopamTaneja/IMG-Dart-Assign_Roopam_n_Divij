@@ -25,7 +25,7 @@ void main(List<String> arguments) async {
 
     final channel = parsed['channel'];
     final server = parsed['server'];
-    String type = parsed['type'] ?? "default";
+    String type = parsed['type'] ?? "text";
 
     String activeUser = currentSession['username'];
     final currentUser = await users.findOne(where.eq('username', activeUser));

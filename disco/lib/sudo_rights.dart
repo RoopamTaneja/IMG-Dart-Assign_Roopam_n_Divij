@@ -42,18 +42,18 @@ void main(List<String> arguments) async {
     } else {
       //now call different fns and pass different values as per need
       if (command == "addMod") {
-        addMod(users, servers, server, username);
+        await addMod(users, servers, server, username);
       } else if (command == "removeMod") {
-        removeMod(servers, server, username);
+        await removeMod(servers, server, username);
       } else if (command == "showMod") {
-        showMods(servers, server);
+        await showMods(servers, server);
       }
     }
   }
   db.close();
 }
 
-void showMods(DbCollection servers, server) async {
+Future showMods(DbCollection servers, server) async {
   //dart bin/disco.dart sudo -o showMod -s servername
 
   var check = await servers.find(where.eq('serverName', server)).isEmpty;
@@ -72,7 +72,8 @@ void showMods(DbCollection servers, server) async {
   }
 }
 
-void addMod(DbCollection users, DbCollection servers, server, username) async {
+Future addMod(
+    DbCollection users, DbCollection servers, server, username) async {
   //dart bin/disco.dart sudo -o addMod -s servername -u username
 
   var check = await servers.find(where.eq('serverName', server)).isEmpty;
@@ -95,4 +96,4 @@ void addMod(DbCollection users, DbCollection servers, server, username) async {
   }
 }
 
-void removeMod(DbCollection servers, server, username) async {}
+Future removeMod(DbCollection servers, server, username) async {}

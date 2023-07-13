@@ -37,16 +37,16 @@ void main(List<String> arguments) async {
     } else {
       //now call different fns and pass different values as per need
       if (arguments[0] == "admit") {
-        admit(users, servers, server, username);
+        await admit(users, servers, server, username);
       } else if (arguments[0] == "show") {
-        show(servers, server);
+        await show(servers, server);
       }
     }
   }
   db.close();
 }
 
-void show(DbCollection servers, server) async {
+Future show(DbCollection servers, server) async {
   //dart bin/disco.dart show -s servername
 
   var check = await servers.find(where.eq('serverName', server)).isEmpty;
@@ -65,7 +65,7 @@ void show(DbCollection servers, server) async {
   }
 }
 
-void admit(DbCollection users, DbCollection servers, server, username) async {
+Future admit(DbCollection users, DbCollection servers, server, username) async {
   //dart bin/disco.dart admit -u username -s servername
 
   var check = await servers.find(where.eq('serverName', server)).isEmpty;
