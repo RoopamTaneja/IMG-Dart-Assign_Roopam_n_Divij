@@ -28,19 +28,27 @@ void main(List<String> arguments) async {
     var serverCurr = await servers.findOne(where.eq('serverName', server));
 
     if (serverCurr == null) {
-      print('ServerErorr : No Such Server');
+      print('ServerError : No Such Server');
     } else {
       var role = serverCurr['roles'][currentSession['username']];
 
-      if (role == null) {
-        //u are not mod
-        print('Permission Denied : You are not a moderator of $server');
+      if (arguments[0] == "showMod") {
+        //mods can be seen by non members also
+
+        showMods(serverCurr);
+      } else if (role != 'creator' && role != 'moderator') {
+        //u are not mod or creator
+        print(
+            'Permission Denied : You are not a moderator or creator of $server');
       } else if (role == 'creator' || role == 'moderator') {
         //now call different fns and pass different values as per need
+
         if (arguments[0] == "admit") {
           await admit(users, servers, server, username, serverCurr);
-        } else if (arguments[0] == "show") {
-          show(serverCurr);
+        } else if (arguments[0] == "showEntrants") {
+          showEntrants(serverCurr);
+        } else if (arguments[0] == "remove") {
+          await remove(users, servers, server, username, serverCurr);
         }
       }
     }
@@ -48,8 +56,8 @@ void main(List<String> arguments) async {
   await db.close();
 }
 
-void show(server) {
-  //dart bin/disco.dart show -s servername
+void showEntrants(server) {
+  //dart bin/disco.dart showEntrants -s servername
 
   List arr = server['inQueue'];
   if (arr.isEmpty) {
@@ -66,22 +74,24 @@ void show(server) {
 Future admit(users, servers, server, username, serverCurr) async {
   //dart bin/disco.dart admit -u username -s servername
 
-  //server exists
   var checkUser = await users.find(where.eq('username', username)).isEmpty;
 
   if (checkUser) {
+    //user does not exist
     print('User Not Found');
     return;
   } else {
-    //user also exists, so add him to allMembers list
-
+    //user exists
+    //check if already a member
     final currentUser = await users.findOne(where.eq('username', username));
     final userID = currentUser?['_id'];
     var role = serverCurr['roles'][username];
     if (role != null) {
+      //yes already member
       print('ServerError : User already in Server');
       return;
     }
+    //no he is not so make him a member
     servers.update(where.eq('serverName', server),
         modify.push('allMembers', {username: userID}));
     servers.update(
@@ -89,5 +99,20 @@ Future admit(users, servers, server, username, serverCurr) async {
     servers.update(where.eq('serverName', server),
         modify.set('roles.$username', 'peasant'));
     print("$username added as member of $server successfully.");
+  }
+}
+
+Future remove(users, servers, server, username, serverCurr) async {}
+
+void showMods(serverCurr) {
+  //dart bin/disco.dart showMods -s servername
+
+  Map<String, dynamic> role = serverCurr['roles'];
+
+  print('List of moderators : ');
+  for (String i in role.keys) {
+    if (role[i] == 'moderator') {
+      print(i);
+    }
   }
 }

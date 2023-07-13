@@ -6,33 +6,34 @@ import 'package:disco/join.dart' as join;
 import 'package:disco/mod_rights.dart' as mod;
 import 'package:disco/sudo_rights.dart' as sudo;
 import 'package:disco/messages.dart' as messages;
+import 'package:disco/inbox.dart' as inbox;
 
 void main(List<String> arguments) {
   if (arguments[0] == "register") {
     create_user.main(arguments);
-  }
-  if (arguments[0] == "login") {
+  } else if (arguments[0] == "login") {
     login.main(arguments);
-  }
-  if (arguments[0] == "logout") {
+  } else if (arguments[0] == "logout") {
     logout.main(arguments);
-  }
-  if (arguments[0] == "create") {
+  } else if (arguments[0] == "create") {
     create.main(arguments);
-  }
-  if (arguments[0] == "join") {
+  } else if (arguments[0] == "join") {
     join.main(arguments);
-  }
-  if (arguments[0] == "admit") {
+  } else if (arguments[0] == "admit") {
     mod.main(arguments);
-  }
-  if (arguments[0] == "show") {
+  } else if (arguments[0] == "showEntrants") {
     mod.main(arguments);
-  }
-  if (arguments[0] == "sudo") {
+  } else if (arguments[0] == "showMods") {
+    mod.main(arguments);
+  } else if (arguments[0] == "remove") {
+    mod.main(arguments);
+  } else if (arguments[0] == "sudo") {
     sudo.main(arguments);
-  }
-  if (arguments[0] == "message") {
+  } else if (arguments[0] == "message") {
     messages.main(arguments);
+  } else if (arguments[0] == "inbox") {
+    inbox.main(arguments);
+  } else {
+    print("SyntaxError : No such command exists");
   }
 }

@@ -49,21 +49,24 @@ void main(List<String> arguments) async {
             .isEmpty;
 
         if (checkUser) {
+          //he is not a member
           var queueCheck = await servers
               .find(where.eq('serverName', server).eq('inQueue', activeUser))
               .isEmpty;
-          //he is not
-          // then add user to waiting queue of server
+
+          //then check if he is already in queue
           if (queueCheck) {
+            //he is not in queue so add him
             servers.update(where.eq('serverName', server),
                 modify.push('inQueue', activeUser));
             print('$activeUser Added to Queue for Approval');
           } else {
+            //he is already in queue
             print(
-                'ServerError: Already in Queue for Approval, Try Contacting Mod or Creator');
+                'ServerError: Already in Queue for Approval, Try Contacting Moderator or Creator');
           }
         } else {
-          //yes he is
+          //yes he is already member
           print('Already Memeber of $server.');
         }
       }
@@ -76,12 +79,14 @@ void main(List<String> arguments) async {
         //server doesn't exist
         print('ServerError: Server Does Not Exist');
       } else {
+        //server exists
+
         var localServer = db.collection(server);
         var checkChannel =
             await localServer.find(where.eq('channelName', channel)).isEmpty;
         if (checkChannel) {
           //channel does not exist
-          print('ChannelError : Channel Does Not Exists');
+          print('ChannelError : Channel Does Not Exist in $server');
         } else {
           //server and channel both exist
 
@@ -97,25 +102,28 @@ void main(List<String> arguments) async {
               .isEmpty;
 
           if (checkUser) {
-            //he is not
-            // then add user to waiting queue of server
+            //he is not a member
+
             var queueCheck = await servers
                 .find(where.eq('serverName', server).eq('inQueue', activeUser))
                 .isEmpty;
-            //he is not
-            // then add user to waiting queue of server
+
+            //then check if he is already in queue
             if (queueCheck) {
+              //he is not in queue so add him
               servers.update(where.eq('serverName', server),
                   modify.push('inQueue', activeUser));
-              print('$activeUser Added to Queue for Approval');
-            } else {
               print(
-                  'ServerError: Already in Queue for Approval, Try Contacting Mod or Creator');
+                  '$activeUser is not yet a Member of $server. $activeUser Added to Queue for Approval');
+            } else {
+              //he is already in queue
+              print(
+                  'ServerError: Already in Queue for Approval of Joining $server. Try Contacting Mod or Creator');
             }
           } else {
-            //yes he is
+            //yes he is server member
 
-            //is user already channel member
+            //is he channel member
             var checkInChannel = await localServer
                 .find(where
                     .eq('channelName', channel)
@@ -124,14 +132,15 @@ void main(List<String> arguments) async {
 
             if (checkInChannel) {
               //no he is not
+              //so add him in channel
 
               await localServer.update(where.eq('channelName', channel),
                   modify.push('members', {activeUser: activeUserId}));
               print('Successfully Joined Channel $channel of Server $server');
             } else {
-              //yes he is
+              //yes he is already in channel
 
-              print('$activeUser is already member of $channel of $server.');
+              print('$activeUser is Already Member of $channel of $server.');
             }
           }
         }
