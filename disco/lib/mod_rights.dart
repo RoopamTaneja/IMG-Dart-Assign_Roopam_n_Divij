@@ -35,7 +35,7 @@ void main(List<String> arguments) async {
       if (role == null) {
         //u are not mod
         print('Permission Denied : You are not a moderator of $server');
-      } else if (role == 'creator') {
+      } else if (role == 'creator' || role == 'moderator') {
         //now call different fns and pass different values as per need
         if (arguments[0] == "admit") {
           await admit(users, servers, server, username, serverCurr);

@@ -138,7 +138,8 @@ Map<String, dynamic> createChannel(channel, activeUser, activeUserId, type) {
     'members': [
       {activeUser: activeUserId}
     ],
-    'type': type
+    'type': type,
+    'messages': []
   };
   return document;
 }
