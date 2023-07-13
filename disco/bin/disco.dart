@@ -36,4 +36,7 @@ void main(List<String> arguments) {
   } else {
     print("SyntaxError : No such command exists");
   }
+  if (arguments[0] == "inbox") {
+    inbox.main(arguments);
+  }
 }
