@@ -35,8 +35,9 @@ void main(List<String> arguments) async {
     var checkOwner = await servers
         .find(where.eq('serverName', server).eq('userId', userID))
         .isEmpty;
-
-    if (checkOwner) {
+    if (command == "showMod") {
+      await showMods(servers, server);
+    } else if (checkOwner) {
       //u are not owner
       print('Permission Denied : You are not the owner of $server');
     } else {
@@ -44,9 +45,7 @@ void main(List<String> arguments) async {
       if (command == "addMod") {
         await addMod(users, servers, server, username);
       } else if (command == "removeMod") {
-        await removeMod(servers, server, username);
-      } else if (command == "showMod") {
-        await showMods(servers, server);
+        await removeMod(users, servers, server, username);
       }
     }
   }
@@ -64,10 +63,17 @@ Future showMods(DbCollection servers, server) async {
   } else {
     //server exists
     var serverDoc = await servers.findOne(where.eq('serverName', server));
-    var arr = serverDoc?['mods'];
+    if (serverDoc == null) {
+      print('ServerError: Server does Not Exist');
+      return;
+    }
+    Map<String, dynamic> role = serverDoc['roles'];
+
     print('List of moderators : ');
-    for (String i in arr) {
-      print(i);
+    for (String i in role.keys) {
+      if (role[i] == 'moderator') {
+        print(i);
+      }
     }
   }
 }
@@ -89,11 +95,31 @@ Future addMod(
       return;
     } else {
       //user also exists, so add him to mods list
-      servers.update(
-          where.eq('serverName', server), modify.push('mods', username));
+      servers.update(where.eq('serverName', server),
+          modify.set('roles.$username', 'moderator'));
       print("$username added as moderator of $server successfully.");
     }
   }
 }
 
-Future removeMod(DbCollection servers, server, username) async {}
+Future removeMod(
+    DbCollection users, DbCollection servers, server, username) async {
+  var check = await servers.find(where.eq('serverName', server)).isEmpty;
+
+  if (check) {
+    print('ServerError: Server Does Not Exist');
+    return;
+  } else {
+    //server exists
+    var checkUser = await users.find(where.eq('username', username)).isEmpty;
+    if (checkUser) {
+      print('User Not Found');
+      return;
+    } else {
+      //user also exists, so add him to mods list
+      servers.update(where.eq('serverName', server),
+          modify.set('roles.$username', 'peasant'));
+      print("$username added as moderator of $server successfully.");
+    }
+  }
+}
