@@ -15,6 +15,7 @@ void main(List<String> arguments) async {
 
   //checking for any login
   if (currentSession == null) {
+    //evaluating command line arguments
     final parser = ArgParser();
     parser.addOption('username', abbr: 'u', help: 'LOGIN USER');
     final parsed = parser.parse(arguments);
