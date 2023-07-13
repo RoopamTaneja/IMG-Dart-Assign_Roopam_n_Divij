@@ -30,8 +30,8 @@ void main(List<String> arguments) async {
 
     if (channel == null && server != null) {
       //only server name given
-      var check = await servers.find(where.eq('serverName', server)).isEmpty;
-
+      var serverMain = await servers.find(where.eq('serverName', server));
+      var check = await serverMain.isEmpty;
       if (check) {
         //server doesn't exist
         print('ServerError: Server Does Not Exist');
@@ -49,15 +49,22 @@ void main(List<String> arguments) async {
             .isEmpty;
 
         if (checkUser) {
+          var queueCheck = await servers
+              .find(where.eq('serverName', server).eq('inQueue', activeUser))
+              .isEmpty;
           //he is not
           // then add user to waiting queue of server
-          servers.update(where.eq('serverName', server),
-              modify.push('inQueue', activeUser));
-          print(
-              '$activeUser is not a member of $server. $activeUser added to queue for approval');
+          if (queueCheck) {
+            servers.update(where.eq('serverName', server),
+                modify.push('inQueue', activeUser));
+            print('$activeUser Added to Queue for Approval');
+          } else {
+            print(
+                'ServerError: Already in Queue for Approval, Try Contacting Mod or Creator');
+          }
         } else {
           //yes he is
-          print('$activeUser is already member of $server.');
+          print('Already Memeber of $server.');
         }
       }
     } else if (channel != null && server != null) {
@@ -92,10 +99,19 @@ void main(List<String> arguments) async {
           if (checkUser) {
             //he is not
             // then add user to waiting queue of server
-            servers.update(where.eq('serverName', server),
-                modify.push('inQueue', currentSession['username']));
-            print(
-                '$activeUser is not a member of $server. $activeUser added to queue for approval');
+            var queueCheck = await servers
+                .find(where.eq('serverName', server).eq('inQueue', activeUser))
+                .isEmpty;
+            //he is not
+            // then add user to waiting queue of server
+            if (queueCheck) {
+              servers.update(where.eq('serverName', server),
+                  modify.push('inQueue', activeUser));
+              print('$activeUser Added to Queue for Approval');
+            } else {
+              print(
+                  'ServerError: Already in Queue for Approval, Try Contacting Mod or Creator');
+            }
           } else {
             //yes he is
 

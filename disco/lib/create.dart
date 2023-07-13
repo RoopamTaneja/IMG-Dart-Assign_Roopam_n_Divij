@@ -123,8 +123,7 @@ Map<String, dynamic> createServer(sName, activeUser, activeUserId) {
     'creator': activeUser,
     'userId': activeUserId,
     'serverId': Uuid().v1(),
-    'mods': [],
-    'peasants': [],
+    'roles': {activeUser: 'creator'},
     'allMembers': [
       {activeUser: activeUserId}
     ],

@@ -25,69 +25,67 @@ void main(List<String> arguments) async {
     final server = parsed['server'];
     final username = parsed['username'];
 
-    var checkMod = await servers
-        .find(where
-            .eq('serverName', server)
-            .eq('mods', currentSession['username']))
-        .isEmpty;
+    var serverCurr = await servers.findOne(where.eq('serverName', server));
 
-    if (checkMod) {
-      //u are not mod
-      print('Permission Denied : You are not a moderator of $server');
+    if (serverCurr == null) {
+      print('ServerErorr : No Such Server');
     } else {
-      //now call different fns and pass different values as per need
-      if (arguments[0] == "admit") {
-        await admit(users, servers, server, username);
-      } else if (arguments[0] == "show") {
-        await show(servers, server);
+      var role = serverCurr['roles'][currentSession['username']];
+
+      if (role == null) {
+        //u are not mod
+        print('Permission Denied : You are not a moderator of $server');
+      } else if (role == 'creator') {
+        //now call different fns and pass different values as per need
+        if (arguments[0] == "admit") {
+          await admit(users, servers, server, username, serverCurr);
+        } else if (arguments[0] == "show") {
+          show(serverCurr);
+        }
       }
     }
   }
-  db.close();
+  await db.close();
 }
 
-Future show(DbCollection servers, server) async {
+void show(server) {
   //dart bin/disco.dart show -s servername
 
-  var check = await servers.find(where.eq('serverName', server)).isEmpty;
+  //server exists
 
-  if (check) {
-    print('ServerError: Server Does Not Exist');
-    return;
-  } else {
-    //server exists
-    var serverDoc = await servers.findOne(where.eq('serverName', server));
-    var arr = serverDoc?['inQueue'];
-    print('List of users waiting for approval to join : ');
-    for (String i in arr) {
-      print(i);
-    }
+  var arr = server['inQueue'];
+
+  print('List of users waiting for approval to join : ');
+  for (String i in arr) {
+    print(i);
   }
 }
 
-Future admit(DbCollection users, DbCollection servers, server, username) async {
+Future admit(users, servers, server, username, serverCurr) async {
   //dart bin/disco.dart admit -u username -s servername
 
-  var check = await servers.find(where.eq('serverName', server)).isEmpty;
+  //server exists
+  var checkUser = await users.find(where.eq('username', username)).isEmpty;
 
-  if (check) {
-    print('ServerError: Server Does Not Exist');
+  if (checkUser) {
+    print('User Not Found');
     return;
   } else {
-    //server exists
-    var checkUser = await users.find(where.eq('username', username)).isEmpty;
-    if (checkUser) {
-      print('User Not Found');
+    //user also exists, so add him to allMembers list
+
+    final currentUser = await users.findOne(where.eq('username', username));
+    final userID = currentUser?['_id'];
+    var role = serverCurr['roles'][username];
+    if (role != null) {
+      print('ServerError : User already in Server');
       return;
-    } else {
-      //user also exists, so add him to allMembers list
-      final currentUser = await users.findOne(where.eq('username', username));
-      final userID = currentUser?['_id'];
-      servers.update(where.eq('serverName', server),
-          modify.push('allMembers', {username: userID}));
-      servers.update(
-          where.eq('serverName', server), modify.pull('inQueue', username));
-      print("$username added as member of $server successfully.");
     }
+    servers.update(where.eq('serverName', server),
+        modify.push('allMembers', {username: userID}));
+    servers.update(
+        where.eq('serverName', server), modify.pull('inQueue', username));
+    servers.update(where.eq('serverName', server),
+        modify.set('roles.$username', 'peasant'));
+    print("$username added as member of $server successfully.");
   }
 }
