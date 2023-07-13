@@ -4,6 +4,7 @@ import 'package:crypto/crypto.dart';
 import 'dart:io';
 
 void main(List<String> arguments) async {
+  //creating instance of database server
   final db = await Db.create('mongodb://127.0.0.1:27017/myDB');
   await db.open();
 
@@ -11,17 +12,21 @@ void main(List<String> arguments) async {
   final userSessions = db.collection('userSession');
   final currentSession = await userSessions.findOne();
 
+  //checking if any user is logged in
   if (currentSession != null) {
     String username = currentSession['username'];
     final user = await users.findOne(where.eq('username', username));
 
+    //checking for existance of user logged in
     if (user != null) {
-      stdout.write("$username, enter your password to logout : ");
+      stdout.write("Enter Password to Logout : ");
       stdin.echoMode = false;
       var pass = stdin.readLineSync().toString();
       print('');
       stdin.echoMode = true;
       var hashedPass = hashPass(pass);
+
+      //cehcking for validity of user logged in
       if (user['hash'] == hashedPass) {
         await userSessions.deleteMany({});
         print('Logout success');
