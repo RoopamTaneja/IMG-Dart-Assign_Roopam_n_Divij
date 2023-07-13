@@ -38,6 +38,23 @@ void main(List<String> arguments) async {
     if (sender != null && (server != null || channel != null)) {
       print('SyntaxError : Enter Only One Mode of Inbox');
     }
+    if (sender == "ALL") {
+      final messages =
+          await messageDB.find(where.eq('receiver', receiver)).toList();
+      int limitF = max(limit, 10);
+      for (var i in messages.reversed) {
+        print('FROM : ' + i['sender']);
+        print('SENT ON : ' + i['time']);
+        print(i['message']);
+        print('');
+        limitF--;
+        if (limitF == 0) {
+          break;
+        }
+      }
+      db.close();
+      return;
+    }
     if (sender != null) {
       final checkReceiver =
           await userAuth.find(where.eq('username', sender)).isEmpty;
@@ -61,6 +78,7 @@ void main(List<String> arguments) async {
         }
       }
     }
+
     if (server == null && channel != null) {
       print('SyntaxError : Enter Server Name');
     }
