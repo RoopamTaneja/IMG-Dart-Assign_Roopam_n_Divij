@@ -7,7 +7,7 @@ Time to sharpen your Dart & OOPs skills! Any extra features will give you browni
 
 Feel free to contact in case of any doubts :)
 
-Q) By now you must have tried doing something on the terminal. Maybe it was a `cd` or `git commit -m "msg"`. Ever wondered how to create these wonderful applications (yes they're!)? Now the time is to act upon as the task for the assignment, you guessed it, is to create a Command Line Interface Application. Appication on what? You've used discord haven't you? What would be like if you have to type in something specific to send a message?
+Q) By now you must have tried doing something on the terminal. Maybe it was a `cd` or `git commit -m "msg"`. Ever wondered how to create these wonderful applications (yes they're!)? Now the time is to act upon as the task for the assignment, you guessed it, is to create a Command Line Interface Application. Application on what? You've used discord haven't you? What would be like if you have to type in something specific to send a message?
 
 ### Make a class based CLI application for Discord. 
 
@@ -72,7 +72,7 @@ category1
 category2
 ```
 
-- **Lock channels for diiferent roles to send messages in channels**
+- **Lock channels for different roles to send messages in channels**
 - **Allow users to DM each other**
 - **Have different channel & server types**
 

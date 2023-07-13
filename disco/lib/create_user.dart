@@ -36,7 +36,7 @@ void main(List<String> arguments) async {
       stdin.echoMode = true;
       print('');
 
-      //checking if password match
+      //checking if passwords match
       if (pass == passCon) {
         var hashedPass = hashPass(pass);
 

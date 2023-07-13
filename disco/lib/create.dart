@@ -25,7 +25,7 @@ void main(List<String> arguments) async {
 
     final channel = parsed['channel'];
     final server = parsed['server'];
-    String type = parsed['type'] ?? "default";
+    String type = parsed['type'] ?? "text";
 
     String activeUser = currentSession['username'];
     final currentUser = await users.findOne(where.eq('username', activeUser));
@@ -51,10 +51,10 @@ void main(List<String> arguments) async {
         }
       }
     } else if (channel != null && server != null) {
-      var check = await servers.find(where.eq('serverName', server)).isEmpty;
+      var serverCurr = await servers.findOne(where.eq('serverName', server));
       var localServer = db.collection(server);
 
-      if (check) {
+      if (serverCurr == null) {
         //no server...so make server and channel
         final document = createServer(server, activeUser, activeUserId);
         final res1 = await servers
@@ -74,16 +74,11 @@ void main(List<String> arguments) async {
       } else {
         //there is server, only channel needs to be added
 
-        var checkuser =
-            await servers //check if user is already a member of that server
-                .find(where
-                    .eq('serverName', server)
-                    .eq('allMembers', {activeUser: activeUserId}))
-                .isEmpty;
-
-        if (checkuser) {
-          //user not part of server
-          print('Permission Denied : You are not a member of $server');
+        var role = serverCurr['roles'][activeUser];
+        if (role != 'mod' && role != 'creator') {
+          //user not mod or creator
+          print(
+              'Permission Denied : You are not a moderator or creator of $server');
         } else {
           var checkChannel =
               await localServer.find(where.eq('channelName', channel)).isEmpty;

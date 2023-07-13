@@ -19,14 +19,14 @@ void main(List<String> arguments) async {
 
     //checking for existance of user logged in
     if (user != null) {
-      stdout.write("Enter Password to Logout : ");
+      stdout.write("$username, Enter Your Password to Logout : ");
       stdin.echoMode = false;
       var pass = stdin.readLineSync().toString();
       print('');
       stdin.echoMode = true;
       var hashedPass = hashPass(pass);
 
-      //cehcking for validity of user logged in
+      //checking for validity of user logged in
       if (user['hash'] == hashedPass) {
         await userSessions.deleteMany({});
         print('Logout success');

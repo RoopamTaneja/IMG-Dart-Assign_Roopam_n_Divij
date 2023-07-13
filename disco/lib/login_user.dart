@@ -47,7 +47,7 @@ void main(List<String> arguments) async {
       }
     }
   } else {
-    //cehcking if user is already logged in
+    //checking if some user is already logged in
     String username = currentSession['username'];
     print('DuplicacyError : $username Already Logged In');
   }

@@ -1,6 +1,5 @@
 import 'package:args/args.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'dart:io';
 
 void main(List<String> arguments) async {
   //creating a new instance of the database server
