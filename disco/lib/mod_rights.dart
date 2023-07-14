@@ -32,7 +32,7 @@ void main(List<String> arguments) async {
     } else {
       var role = serverCurr['roles'][currentSession['username']];
 
-      if (arguments[0] == "showMod") {
+      if (arguments[0] == "showMods") {
         //mods can be seen by non members also
 
         showMods(serverCurr);
@@ -74,6 +74,7 @@ void showEntrants(server) {
 Future admit(users, servers, server, username, serverCurr) async {
   //dart bin/disco.dart admit -u username -s servername
 
+  //server exists
   var checkUser = await users.find(where.eq('username', username)).isEmpty;
 
   if (checkUser) {
@@ -92,11 +93,11 @@ Future admit(users, servers, server, username, serverCurr) async {
       return;
     }
     //no he is not so make him a member
-    servers.update(where.eq('serverName', server),
+    await servers.update(where.eq('serverName', server),
         modify.push('allMembers', {username: userID}));
-    servers.update(
+    await servers.update(
         where.eq('serverName', server), modify.pull('inQueue', username));
-    servers.update(where.eq('serverName', server),
+    await servers.update(where.eq('serverName', server),
         modify.set('roles.$username', 'peasant'));
     print("$username added as member of $server successfully.");
   }
@@ -110,9 +111,16 @@ void showMods(serverCurr) {
   Map<String, dynamic> role = serverCurr['roles'];
 
   print('List of moderators : ');
+  int count = 0;
   for (String i in role.keys) {
     if (role[i] == 'moderator') {
       print(i);
+      count++;
     }
+  }
+  if (count == 0) {
+    var server = serverCurr['serverName'];
+    var creator = serverCurr['creator'];
+    print("No moderators in $server except creator : $creator");
   }
 }

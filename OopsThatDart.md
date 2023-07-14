@@ -14,7 +14,7 @@ Q) By now you must have tried doing something on the terminal. Maybe it was a `c
 This features are compulsory to have in your solution:
 
 - **Register a User:**
-Register(signup) a user with their username, If user is already registered, print `failure`.
+Register(signup) a user with their username, if user is already registered, print `failure`.
 _Input example_: `register 2 user1 user2`
 _Expected output_: `success`
 
