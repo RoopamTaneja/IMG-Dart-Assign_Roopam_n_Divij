@@ -4,23 +4,31 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'dart:io';
 
 class User {
-  // ignore: unused_field
-  String? _id;
+  String? id;
   String? username;
   // ignore: unused_field
   String? _hash;
 
   User();
 
-  Future<bool> exists(String username, DbCollection userAuth) async {
-    final user = await userAuth.findOne(where.eq('username', username));
-    bool check = (user != null);
-    return check;
+  void setData(username, id, hash) {
+    this.username = username;
+    this.id = id;
+    _hash = hash;
+  }
+
+  void get getData =>
+      print("User details : Username - $username, UserID - $id");
+
+  Future setUserData(String name, DbCollection userAuth) async {
+    final user = await findUser(name, userAuth);
+    username = name;
+    id = user['_id'];
+    _hash = user['hash'];
   }
 
   Future? findUser(String username, DbCollection userAuth) async {
-    final user = await userAuth.findOne(where.eq('username', username));
-    return user;
+    return await userAuth.findOne(where.eq('username', username));
   }
 
   Future register(String name, DbCollection userAuth) async {
@@ -44,9 +52,7 @@ class User {
 
       final result = await userAuth.insertOne(document);
       if (result.isAcknowledged) {
-        _id = id;
-        username = name;
-        _hash = hashedPass;
+        setData(name, id, hashedPass);
 
         print('Succesfully Registered ');
       } else {

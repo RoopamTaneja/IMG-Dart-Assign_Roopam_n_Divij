@@ -1,6 +1,7 @@
 import 'package:args/args.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/user.dart';
+import 'package:disco/models/checks.dart';
 
 void main(List<String> arguments) async {
   //creating a new instance of the database server
@@ -20,11 +21,12 @@ void main(List<String> arguments) async {
 
     //registering the user in database USERAUTH
     final userAuth = db.collection('userAuth');
-    User userObj = User();
-    bool userExists = await userObj.exists(username, userAuth);
+    Checks errors = Checks();
+    bool userExists = await errors.userExists(username, userAuth);
 
     //only registering if user does not exist
     if (!userExists) {
+      User userObj = User();
       await userObj.register(username, userAuth);
     } else {
       print('DuplicacyError : User Already Exists');
