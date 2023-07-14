@@ -29,6 +29,8 @@ void main(List<String> arguments) {
       case "admit":
       case "showEntrants":
       case "showMods":
+      case "showChannels":
+      case "showServers":
       case "remove":
         mod.main(arguments);
         break;

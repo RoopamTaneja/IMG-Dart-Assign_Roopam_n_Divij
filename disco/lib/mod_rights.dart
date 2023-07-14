@@ -11,7 +11,9 @@ void main(List<String> arguments) async {
   final userSessions = db.collection('userSession');
   final currentSession = await userSessions.findOne();
 
-  if (currentSession == null) {
+  if (arguments[0] == "showServers") {
+    await showServers(servers);
+  } else if (currentSession == null) {
     //if no user logged in then no point in moving ahead
     print('LoginError : No User Logged In');
   } else {
@@ -26,6 +28,7 @@ void main(List<String> arguments) async {
     final channel = parsed['channel'];
     var serverCurr = await servers.findOne(where.eq('serverName', server));
     final currentUser = currentSession['username'];
+
     if (serverCurr == null) {
       print('ServerError : No Such Server');
     } else {
@@ -35,6 +38,9 @@ void main(List<String> arguments) async {
         //mods can be seen by non members also
 
         showMods(serverCurr);
+      } else if (arguments[0] == "showChannels") {
+        var serverCurrent = db.collection(server);
+        await showChannels(serverCurrent);
       } else if (role != 'creator' && role != 'moderator') {
         //u are not mod or creator
         print(
@@ -47,15 +53,30 @@ void main(List<String> arguments) async {
         } else if (arguments[0] == "showEntrants") {
           showEntrants(serverCurr);
         } else if (arguments[0] == "remove") {
-          var serverCurr = db.collection(server);
-
-          await remove(users, servers, server, serverCurr, username, channel,
+          var serverCurrent = db.collection(server);
+          await remove(users, servers, server, serverCurrent, username, channel,
               role, currentUser);
         }
       }
     }
   }
   await db.close();
+}
+
+Future showServers(servers) async {
+  List serverName =
+      await servers.find().map((doc) => doc['serverName']).toList();
+  for (String i in serverName) {
+    print(i);
+  }
+}
+
+Future showChannels(serverCurrent) async {
+  List channelNames =
+      await serverCurrent.find().map((doc) => doc['channelName']).toList();
+  for (String i in channelNames) {
+    print(i);
+  }
 }
 
 void showEntrants(server) {
@@ -118,7 +139,7 @@ Future remove(users, servers, server, serverCurr, username, channel, role,
     var Server = await servers.findOne(where.eq('serverName', server));
     Map<String, dynamic> roleList = server['roles'];
     var roleCurrent = roleList[currentUser];
-    if (roleCurrent == 'mod' && role == 'creator') {
+    if (roleCurrent == 'moderator' && role == 'creator') {
       print('ServerError : You Do Not Have Permission to Remove');
       return;
     }
