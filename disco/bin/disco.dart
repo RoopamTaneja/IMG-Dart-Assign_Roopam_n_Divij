@@ -9,35 +9,37 @@ import 'package:disco/messages.dart' as messages;
 import 'package:disco/inbox.dart' as inbox;
 
 void main(List<String> arguments) {
-  switch (arguments[0]) {
-    case "register":
-      create_user.main(arguments);
-      break;
-    case "login":
-      login.main(arguments);
-      break;
-    case "logout":
-      logout.main(arguments);
-      break;
-    case "create":
-      create.main(arguments);
-      break;
-    case "join":
-      join.main(arguments);
-      break;
-    case "remove":
-      mod.main(arguments);
-      break;
-    case "sudo":
-      sudo.main(arguments);
-      break;
-    case "message":
-      messages.main(arguments);
-      break;
-    case "inbox":
-      inbox.main(arguments);
-      break;
-    default:
-      print("SyntaxError : No such command exists");
+  if (arguments.isNotEmpty) {
+    switch (arguments[0]) {
+      case "register":
+        create_user.main(arguments);
+        break;
+      case "login":
+        login.main(arguments);
+        break;
+      case "logout":
+        logout.main(arguments);
+        break;
+      case "create":
+        create.main(arguments);
+        break;
+      case "join":
+        join.main(arguments);
+        break;
+      case "remove":
+        mod.main(arguments);
+        break;
+      case "sudo":
+        sudo.main(arguments);
+        break;
+      case "message":
+        messages.main(arguments);
+        break;
+      case "inbox":
+        inbox.main(arguments);
+        break;
+      default:
+        print("SyntaxError : No such command exists");
+    }
   }
 }
