@@ -7,6 +7,8 @@ import 'package:disco/mod_rights.dart' as mod;
 import 'package:disco/sudo_rights.dart' as sudo;
 import 'package:disco/messages.dart' as messages;
 import 'package:disco/inbox.dart' as inbox;
+import 'package:disco/leave.dart' as leave;
+import 'package:disco/bye.dart' as bye;
 
 void main(List<String> arguments) {
   if (arguments.isNotEmpty) {
@@ -42,6 +44,12 @@ void main(List<String> arguments) {
         break;
       case "inbox":
         inbox.main(arguments);
+        break;
+      case "leave":
+        leave.main(arguments);
+        break;
+      case "bye":
+        bye.main(arguments);
         break;
       default:
         print("SyntaxError : No such command exists");
