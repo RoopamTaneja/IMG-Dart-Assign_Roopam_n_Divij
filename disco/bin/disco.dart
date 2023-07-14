@@ -26,6 +26,9 @@ void main(List<String> arguments) {
       case "join":
         join.main(arguments);
         break;
+      case "admit":
+      case "showEntrants":
+      case "showMods":
       case "remove":
         mod.main(arguments);
         break;

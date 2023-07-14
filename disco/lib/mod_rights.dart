@@ -18,15 +18,14 @@ void main(List<String> arguments) async {
     final parser = ArgParser();
     //add all parser options here for all fns
     parser.addOption('username', abbr: 'u', help: 'ADD USER');
-    parser.addOption("server",
-        abbr: "s", help: "CREATE SERVER/CHANNEL WITHIN SERVER");
-
+    parser.addOption("server", abbr: "s", help: "SERVER RELATED RIGHTS");
+    parser.addOption("channel", abbr: "c", help: "CHANNEL RELATED RIGHTS");
     final parsed = parser.parse(arguments);
     final server = parsed['server'];
     final username = parsed['username'];
-
+    final channel = parsed['channel'];
     var serverCurr = await servers.findOne(where.eq('serverName', server));
-
+    final currentUser = currentSession['username'];
     if (serverCurr == null) {
       print('ServerError : No Such Server');
     } else {
@@ -44,11 +43,14 @@ void main(List<String> arguments) async {
         //now call different fns and pass different values as per need
 
         if (arguments[0] == "admit") {
-          await admit(users, servers, server, username, serverCurr);
+          await admit(users, servers, server, username, serverCurr, channel);
         } else if (arguments[0] == "showEntrants") {
           showEntrants(serverCurr);
         } else if (arguments[0] == "remove") {
-          await remove(users, servers, server, username, serverCurr);
+          var serverCurr = db.collection(server);
+
+          await remove(users, servers, server, serverCurr, username, channel,
+              role, currentUser);
         }
       }
     }
@@ -71,7 +73,7 @@ void showEntrants(server) {
   }
 }
 
-Future admit(users, servers, server, username, serverCurr) async {
+Future admit(users, servers, server, username, serverCurr, channel) async {
   //dart bin/disco.dart admit -u username -s servername
 
   //server exists
@@ -103,7 +105,80 @@ Future admit(users, servers, server, username, serverCurr) async {
   }
 }
 
-Future remove(users, servers, server, username, serverCurr) async {}
+Future remove(users, servers, server, serverCurr, username, channel, role,
+    currentUser) async {
+  //server exists
+  var checkUser = await users.find(where.eq('username', username)).isEmpty;
+
+  if (checkUser) {
+    //user does not exist
+    print('User Not Found');
+    return;
+  } else {
+    var Server = await servers.findOne(where.eq('serverName', server));
+    Map<String, dynamic> roleList = server['roles'];
+    var roleCurrent = roleList[currentUser];
+    if (roleCurrent == 'mod' && role == 'creator') {
+      print('ServerError : You Do Not Have Permission to Remove');
+      return;
+    }
+    if (channel != null && server != null) {
+      var checkChannel =
+          await serverCurr.find(where.eq('channelName', channel)).isEmpty;
+      if (checkChannel) {
+        print('ChannalError: Channel not found');
+        return;
+      }
+      final currentUser = await users.findOne(where.eq('username', username));
+      dynamic userID = currentUser?['_id'];
+
+      var Channel = await serverCurr.findOne(where.eq('channelName', channel));
+      List memberList = Channel['members'];
+
+      if (!memberList.any((member) =>
+          member.containsKey(username) && member[username] == userID)) {
+        print('ChannelError : No User Found');
+        return;
+      }
+
+      await serverCurr.update(
+        where.eq('channelName', channel),
+        modify.pull('members', {'$username': userID}),
+      );
+      print('Succefully Removed ' + username + " from " + channel);
+    }
+    if (server != null) {
+      final currentUser = await users.findOne(where.eq('username', username));
+      dynamic userID = currentUser?['_id'];
+
+      List memberList = Server['allMembers'];
+
+      if (!memberList.any((member) =>
+          member.containsKey(username) && member[username] == userID)) {
+        print('ServerError : No User Found');
+        return;
+      }
+
+      await serverCurr.update(
+        where,
+        modify.pullAll('members', [
+          {'$username': userID}
+        ]),
+      );
+      await servers.update(
+        where.eq('serverName', server),
+        modify.pullAll('allMembers', [
+          {'$username': userID}
+        ]),
+      );
+
+      await servers.update(
+          where.eq('serverName', server), modify.unset('roles.$username'));
+    }
+    print('Succefully Removed ' + username + " from " + server);
+    return;
+  }
+}
 
 void showMods(serverCurr) {
   //dart bin/disco.dart showMods -s servername
