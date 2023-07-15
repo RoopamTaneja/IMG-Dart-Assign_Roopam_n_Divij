@@ -4,6 +4,7 @@ import 'package:disco/models/checks.dart';
 import 'package:disco/models/user.dart';
 import 'package:disco/models/server.dart';
 import 'package:disco/models/channel.dart';
+import 'package:disco/models/errors.dart';
 
 void main(List<String> arguments) async {
   final db = await Db.create('mongodb://127.0.0.1:27017/myDB');
@@ -14,7 +15,7 @@ void main(List<String> arguments) async {
 
   if (currentSession == null) {
     //if no user logged in then no point in moving ahead
-    print('LoginError : No User Logged In');
+    LoginError.NotLoggedIn();
   } else {
     final parser = ArgParser();
     parser.addOption("server",
@@ -38,7 +39,7 @@ void main(List<String> arguments) async {
       bool check = await errors.serverExists(server, db);
 
       if (check) {
-        print('ServerError: Server Already Exists');
+        DuplicacyError.ServerExists(server);
       } else {
         //creating the new server
 
@@ -48,7 +49,7 @@ void main(List<String> arguments) async {
         if (result.isAcknowledged) {
           print('Successfully Created Server $server');
         } else {
-          print('ServerError : Unsuccessful Server Creation');
+          ProcessError.UnsuccessfulProcess();
         }
       }
     } else if (channel != null && server != null) {
@@ -67,7 +68,7 @@ void main(List<String> arguments) async {
         if (res1.isAcknowledged && res2.isAcknowledged) {
           print('Successfully Created Channel $channel In Server $server');
         } else {
-          print('Create Opearation Unsuccessful');
+          ProcessError.UnsuccessfulProcess();
         }
       } else {
         //there is server, only channel needs to be added
@@ -76,8 +77,7 @@ void main(List<String> arguments) async {
         bool checkRole = errors.isMod(currServer, userObj);
         if (!checkRole) {
           //user not mod or creator
-          print(
-              'Permission Denied : You are not a moderator or creator of $server');
+          PermissionDeniedError.ModCreatorRight(server);
         } else {
           //check if channel already exists
 
@@ -86,7 +86,7 @@ void main(List<String> arguments) async {
 
           if (checkChannel) {
             //channel already present
-            print('ChannelError : Channel Already Exists');
+            DuplicacyError.ChannelExists(channel);
           } else {
             //channel not present can be added
 
@@ -96,14 +96,14 @@ void main(List<String> arguments) async {
             if (result.isAcknowledged) {
               print('Successfully Created Channel $channel');
             } else {
-              print('ChannelError : Unsuccessful Channel Creation');
+              ProcessError.UnsuccessfulProcess();
             }
           }
         }
       }
     } else {
       //server == null
-      print("SyntaxError: Channel can't be Created Without Server");
+      SyntaxError.ChannelWithoutServer();
     }
   }
 

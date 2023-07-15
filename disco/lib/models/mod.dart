@@ -1,3 +1,4 @@
+import 'package:disco/models/errors.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/user.dart';
 import 'package:disco/models/server.dart';
@@ -45,7 +46,7 @@ class Moderator extends User {
       var role = currServer.roles?[newEntry.username];
       if (role != null) {
         //yes already member
-        print('ServerError : User already in Server');
+        DuplicacyError.UserInServer(username);
         return;
       }
       //no he is not so make him a member
@@ -70,7 +71,7 @@ class Moderator extends User {
 
     if (!checkUser) {
       //user does not exist
-      print('User Not Found');
+      ProcessError.UserDoesNotExist(username);
       return;
     } else {
       User newExit = User();
@@ -79,7 +80,7 @@ class Moderator extends User {
       if (channel != null) {
         var checkChannel = await errors.channelExists(channel, currServer, db);
         if (!checkChannel) {
-          print('ChannalError: Channel not found');
+          ProcessError.ChannelDoesNotExist(channel);
           return;
         }
         bool isMember =
@@ -98,7 +99,7 @@ class Moderator extends User {
         bool isMember = await errors.isServerMember(newExit, currServer, db);
 
         if (!isMember) {
-          print('ServerError : No User Found');
+          ProcessError.UserNotInServer(username);
           return;
         }
         await serverCurr.update(

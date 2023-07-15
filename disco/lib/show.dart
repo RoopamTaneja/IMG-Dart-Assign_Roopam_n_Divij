@@ -3,6 +3,7 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/checks.dart';
 import 'package:disco/models/user.dart';
 import 'package:disco/models/server.dart';
+import 'package:disco/models/errors.dart';
 
 void main(List<String> arguments) async {
   final db = await Db.create('mongodb://127.0.0.1:27017/myDB');
@@ -17,7 +18,7 @@ void main(List<String> arguments) async {
     await showServers(servers);
   } else if (currentSession == null) {
     //if no user logged in then no point in moving ahead
-    print('LoginError : No User Logged In');
+    LoginError.NotLoggedIn();
   } else {
     final parser = ArgParser();
     //add all parser options here for all fns
@@ -32,7 +33,7 @@ void main(List<String> arguments) async {
     Checks errors = Checks();
     bool check = await errors.serverExists(server, db);
     if (!check) {
-      print('ServerError : No Such Server');
+      ProcessError.ServerDoesNotExist(server);
     } else {
       //server exists
 
