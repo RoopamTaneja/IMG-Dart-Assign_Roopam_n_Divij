@@ -20,18 +20,21 @@ class User {
   void get getData =>
       print("User details : Username - $username, UserID - $id");
 
-  Future setUserData(String name, DbCollection userAuth) async {
-    final user = await findUser(name, userAuth);
+  Future setUserData(String name, Db db) async {
+    final user = await findUser(name, db);
     username = name;
     id = user['_id'];
     _hash = user['hash'];
   }
 
-  Future? findUser(String username, DbCollection userAuth) async {
+  Future? findUser(String username, Db db) async {
+    final userAuth = db.collection('userAuth');
     return await userAuth.findOne(where.eq('username', username));
   }
 
-  Future register(String name, DbCollection userAuth) async {
+  Future register(String name, Db db) async {
+    final userAuth = db.collection('userAuth');
+
     stdout.write("Enter Password : ");
     stdin.echoMode = false;
     var pass = stdin.readLineSync().toString();
@@ -63,8 +66,10 @@ class User {
     }
   }
 
-  Future login(username, userAuth, userSessions) async {
-    final user = await findUser(username, userAuth);
+  Future login(username, Db db) async {
+    final userSessions = db.collection('userSession');
+
+    final user = await findUser(username, db);
     if (user == null) {
       print('LoginError : User $username Not Found');
       return;
@@ -94,8 +99,10 @@ class User {
     }
   }
 
-  Future logout(username, userAuth, userSessions) async {
-    final user = await findUser(username, userAuth);
+  Future logout(username, Db db) async {
+    final userSessions = db.collection('userSession');
+
+    final user = await findUser(username, db);
     if (user != null) {
       stdout.write("$username, Enter Your Password to Logout : ");
       stdin.echoMode = false;

@@ -7,7 +7,6 @@ void main(List<String> arguments) async {
   final db = await Db.create('mongodb://127.0.0.1:27017/myDB');
   await db.open();
 
-  final users = db.collection('userAuth');
   final userSessions = db.collection('userSession');
   final currentSession = await userSessions.findOne();
 
@@ -20,7 +19,7 @@ void main(List<String> arguments) async {
     String username = parsed['username'] as String;
 
     User userObj = User();
-    await userObj.login(username, users, userSessions);
+    await userObj.login(username, db);
   } else {
     //checking if some user is already logged in
 

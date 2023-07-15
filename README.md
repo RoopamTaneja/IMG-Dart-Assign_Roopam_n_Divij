@@ -57,9 +57,20 @@ $ dart run
 &emsp;A channel can be joined only if user is already a member of the server else he/she is added to queue for approval.<br>
 &emsp;e.g. `join -s server1 -c ch1`<br><br>
 
-- `showMods [OPTION]`<br>
-**Usage**: Show list of moderators of a server<br>
+- `showServers`<br>
+**Usage**: Show list of all servers<br>
+&emsp;Can be used even if user not logged in<br><br>
+
+- `showChannels [OPTION]`<br>
+**Usage**: Show list of all channels of a server<br>
 &emsp;-s, --server : specify name of server<br>
+&emsp;Can be used even if user is not server member<br>
+&emsp;e.g. `showChannels -s server1`<br><br>
+
+- `showMods [OPTION]`<br>
+**Usage**: Show list of all moderators of a server<br>
+&emsp;-s, --server : specify name of server<br>
+&emsp;Can be used even if user is not server member<br>
 &emsp;e.g. `showMods -s server1`<br><br>
 
 **_Commands only accessible to moderators and creator_**

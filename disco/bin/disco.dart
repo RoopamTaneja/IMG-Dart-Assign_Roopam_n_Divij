@@ -3,6 +3,7 @@ import 'package:disco/login_user.dart' as login;
 import 'package:disco/logout_user.dart' as logout;
 import 'package:disco/create.dart' as create;
 import 'package:disco/join.dart' as join;
+import 'package:disco/show.dart' as show;
 import 'package:disco/mod_rights.dart' as mod;
 import 'package:disco/sudo_rights.dart' as sudo;
 import 'package:disco/messages.dart' as messages;
@@ -28,11 +29,13 @@ void main(List<String> arguments) {
       case "join":
         join.main(arguments);
         break;
-      case "admit":
-      case "showEntrants":
       case "showMods":
       case "showChannels":
       case "showServers":
+        show.main(arguments);
+        break;
+      case "admit":
+      case "showEntrants":
       case "remove":
         mod.main(arguments);
         break;

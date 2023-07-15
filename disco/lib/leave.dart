@@ -23,7 +23,6 @@ void main(List<String> arguments) async {
   } else {
     final parsed = parser.parse(arguments);
     final server = parsed['server'];
-    final username = parsed['user'];
     final channel = parsed['channel'];
     var serverCurr = await servers.findOne(where.eq('serverName', server));
     final currUser = currentSession['username'];

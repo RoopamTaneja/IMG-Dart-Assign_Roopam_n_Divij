@@ -1,6 +1,5 @@
 import 'package:args/args.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'dart:core';
 
 void main(List<String> arguments) async {
   final db = await Db.create('mongodb://127.0.0.1:27017/myDB');

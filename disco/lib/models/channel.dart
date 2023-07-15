@@ -1,5 +1,5 @@
 import 'package:mongo_dart/mongo_dart.dart';
-// import 'package:disco/models/server.dart';
+import 'package:disco/models/server.dart';
 import 'package:disco/models/user.dart';
 
 class Channel {
@@ -11,8 +11,9 @@ class Channel {
 
   Channel();
 
-  Future createChannel(
-      User creator, channel, type, DbCollection localServer) async {
+  Future createChannel(User creator, channel, type, server, Db db) async {
+    var localServer = db.collection(server);
+
     final document =
         _createChannelDoc(channel, creator.username, creator.id, type);
 
@@ -20,6 +21,12 @@ class Channel {
         .insertOne(document..['_id'] = ObjectId().toHexString());
 
     return result;
+  }
+
+  Future addInChannel(User user, channel, Server server, Db db) async {
+    var localServer = db.collection(server.serverName!);
+    await localServer.update(where.eq('channelName', channel),
+        modify.push('members', {user.username: user.id}));
   }
 
   //private method

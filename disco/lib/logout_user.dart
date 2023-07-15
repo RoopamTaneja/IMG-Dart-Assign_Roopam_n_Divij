@@ -6,7 +6,6 @@ void main(List<String> arguments) async {
   final db = await Db.create('mongodb://127.0.0.1:27017/myDB');
   await db.open();
 
-  final users = db.collection('userAuth');
   final userSessions = db.collection('userSession');
   final currentSession = await userSessions.findOne();
 
@@ -15,7 +14,7 @@ void main(List<String> arguments) async {
     String username = currentSession['username'];
 
     User userObj = User();
-    await userObj.logout(username, users, userSessions);
+    await userObj.logout(username, db);
   } else {
     print('LogoutError : No User Logged in!');
   }
