@@ -72,6 +72,36 @@ class Server {
     }
   }
 
+  Future leaveServer(User user, Db db) async {
+    final servers = db.collection('servers');
+    var localServer = db.collection(serverName!);
+    List memberList = allMembers!;
+
+    if (!memberList.any((member) =>
+        member.containsKey(user.username) &&
+        member[user.username] == user.id)) {
+      print('ServerError : No User Found');
+      return;
+    }
+
+    await localServer.update(
+      where,
+      modify.pullAll('members', [
+        {user.username: user.id}
+      ]),
+    );
+    await servers.update(
+      where.eq('serverName', serverName),
+      modify.pullAll('allMembers', [
+        {user.username: user.id}
+      ]),
+    );
+
+    await servers.update(where.eq('serverName', serverName),
+        modify.unset('roles.${user.username}'));
+    print('Successfully Exited from $serverName');
+  }
+
   void showMods() {
     print('List of moderators : ');
     int count = 0;

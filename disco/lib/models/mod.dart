@@ -23,10 +23,11 @@ class Moderator extends User {
     }
   }
 
-  Future admit(username, Server currServer, Db db) async {
+  Future admit(username, Db db) async {
     //dart bin/disco.dart admit -u username -s servername
 
     final servers = db.collection('servers');
+    final currServer = myServer;
 
     //server exists
     Checks errors = Checks();
@@ -42,27 +43,28 @@ class Moderator extends User {
       User newEntry = User();
       await newEntry.setUserData(username, db);
 
-      var role = currServer.roles?[newEntry.username];
+      var role = currServer?.roles?[newEntry.username];
       if (role != null) {
         //yes already member
         print('ServerError : User already in Server');
         return;
       }
       //no he is not so make him a member
-      await servers.update(where.eq('serverName', currServer.serverName),
+      await servers.update(where.eq('serverName', currServer?.serverName),
           modify.push('allMembers', {username: newEntry.id}));
-      await servers.update(where.eq('serverName', currServer.serverName),
+      await servers.update(where.eq('serverName', currServer?.serverName),
           modify.pull('inQueue', username));
-      await servers.update(where.eq('serverName', currServer.serverName),
+      await servers.update(where.eq('serverName', currServer?.serverName),
           modify.set('roles.$username', 'peasant'));
       print(
-          "$username added as member of ${currServer.serverName} successfully.");
+          "$username added as member of ${currServer?.serverName} successfully.");
     }
   }
 
-  Future remove(username, channel, Server currServer, Db db) async {
+  Future remove(username, channel, Db db) async {
     final servers = db.collection('servers');
-    var serverCurr = db.collection(currServer.serverName!);
+    final currServer = myServer;
+    var serverCurr = db.collection(currServer!.serverName!);
 
     //server exists
     Checks errors = Checks();
@@ -93,7 +95,8 @@ class Moderator extends User {
           where.eq('channelName', channel),
           modify.pull('members', {username: newExit.id}),
         );
-        print('Successfully Removed $username from Channel $channel');
+        print(
+            'Successfully Removed $username from Channel $channel of Server ${currServer.serverName}');
       } else {
         bool isMember = await errors.isServerMember(newExit, currServer, db);
 

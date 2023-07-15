@@ -123,6 +123,87 @@ class User {
     }
   }
 
+  Future deleteAccount(Db db) async {
+    final userSessions = db.collection('userSession');
+    final users = db.collection('userAuth');
+    final servers = db.collection('servers');
+
+    print("Are you sure you wish to delete your account?");
+    stdout.write("Enter Password to Confirm : ");
+    stdin.echoMode = false;
+    var pass = stdin.readLineSync().toString();
+    print('');
+    stdin.echoMode = true;
+    var hashedPass = _hashPass(pass);
+
+    if (_hash != hashedPass) {
+      print('Incorrect Password');
+      return;
+    }
+
+    // ignore: await_only_futures
+    final cursor = await servers.find();
+    await for (var server in cursor) {
+      var memberList = server['allMembers'];
+      List<dynamic> inQueueList = server['inQueue'];
+      var localServer = db.collection(server['serverName']);
+
+      if (!memberList.any(
+          (member) => member.containsKey(username) && member[username] == id)) {
+        if (inQueueList.contains(username)) {
+          await servers.update(
+            where.eq('_id', server['_id']),
+            modify.pullAll('inQueue', [username]),
+          );
+        }
+        continue;
+      }
+      bool changeCreator;
+      if (server['roles']['username'] == 'creator') {
+        changeCreator = true;
+      } else {
+        changeCreator = false;
+      }
+
+      await localServer.update(
+        where,
+        modify.pullAll('members', [
+          {username: id}
+        ]),
+      );
+
+      await servers.update(
+        where.eq('_id', server['_id']),
+        modify.pullAll('allMembers', [
+          {username: id}
+        ]),
+      );
+
+      await servers.update(
+        where.eq('_id', server['_id']),
+        modify.unset('roles.$username'),
+      );
+
+      if (changeCreator == true) {
+        Map<dynamic, dynamic> roles = server['roles'];
+
+        var newCreator = await roles.keys
+            .firstWhere((key) => roles[key] == 'moderator', orElse: () => null);
+
+        newCreator ??= await roles.keys
+            .firstWhere((key) => roles[key] == 'peasant', orElse: () => null);
+        if (newCreator != null) {
+          await servers.update(where.eq('_id', server['_id']),
+              modify.set('roles.$newCreator', 'creator'));
+        }
+      }
+    }
+
+    await users.deleteOne(where.eq('username', username));
+    await userSessions.deleteMany({});
+    print('Account of $username Deleted Successfully.');
+  }
+
   //private method
   String _hashPass(String pass) {
     var bytes = utf8.encode(pass);

@@ -56,89 +56,12 @@ void main(List<String> arguments) async {
         if (arguments[0] == "showEntrants") {
           newMod.showEntrants();
         } else if (arguments[0] == "admit") {
-          await newMod.admit(username, currServer, db);
+          await newMod.admit(username, db);
         } else if (arguments[0] == "remove") {
-          await newMod.remove(username, channel, currServer, db);
+          await newMod.remove(username, channel, db);
         }
       }
     }
   }
   await db.close();
 }
-
-// Future remove(users, servers, server, serverCurr, username, channel, role,
-//     currentUser) async {
-//   //server exists
-//   var checkUser = await users.find(where.eq('username', username)).isEmpty;
-
-//   if (checkUser) {
-//     //user does not exist
-//     print('User Not Found');
-//     return;
-//   } else {
-//     var Server = await servers.findOne(where.eq('serverName', server));
-//     Map<String, dynamic> roleList = server['roles'];
-//     var roleCurrent = roleList[currentUser];
-//     if (roleCurrent == 'moderator' && role == 'creator') {
-//       print('ServerError : You Do Not Have Permission to Remove');
-//       return;
-//     }
-//     if (channel != null && server != null) {
-//       var checkChannel =
-//           await serverCurr.find(where.eq('channelName', channel)).isEmpty;
-//       if (checkChannel) {
-//         print('ChannalError: Channel not found');
-//         return;
-//       }
-//       final currentUser = await users.findOne(where.eq('username', username));
-//       dynamic userID = currentUser?['_id'];
-
-//       var Channel = await serverCurr.findOne(where.eq('channelName', channel));
-//       List memberList = Channel['members'];
-
-//       if (!memberList.any((member) =>
-//           member.containsKey(username) && member[username] == userID)) {
-//         print('ChannelError : No User Found');
-//         return;
-//       }
-
-//       await serverCurr.update(
-//         where.eq('channelName', channel),
-//         modify.pull('members', {'$username': userID}),
-//       );
-//       print('Succefully Removed ' + username + " from " + channel);
-//     } else if (server != null) {
-//       final currentUser = await users.findOne(where.eq('username', username));
-//       dynamic userID = currentUser?['_id'];
-
-//       List memberList = Server['allMembers'];
-
-//       if (!memberList.any((member) =>
-//           member.containsKey(username) && member[username] == userID)) {
-//         print('ServerError : No User Found');
-//         return;
-//       }
-
-//       await serverCurr.update(
-//         where,
-//         modify.pullAll('members', [
-//           {'$username': userID}
-//         ]),
-//       );
-//       await servers.update(
-//         where.eq('serverName', server),
-//         modify.pullAll('allMembers', [
-//           {'$username': userID}
-//         ]),
-//       );
-
-//       await servers.update(
-//           where.eq('serverName', server), modify.unset('roles.$username'));
-//       print('Succefully Removed ' + username + " from " + server);
-//       return;
-//     } else {
-//       print('SyntaxError : Invalid Syntax Provide Server Name');
-//       return;
-//     }
-//   }
-// }

@@ -27,7 +27,7 @@ void main(List<String> arguments) async {
 
     final channel = parsed['channel'];
     final server = parsed['server'];
-    String activeUser = currentSession['username'];
+    var activeUser = currentSession['username'];
     User userObj = User();
     await userObj.setUserData(activeUser, db);
 
@@ -44,7 +44,7 @@ void main(List<String> arguments) async {
         await currServer.setServerData(server, db);
 
         //is user already server member
-        bool checkUser = await errors.isServerMember(userObj, server, db);
+        bool checkUser = await errors.isServerMember(userObj, currServer, db);
 
         if (!checkUser) {
           //he is not a member
@@ -86,7 +86,7 @@ void main(List<String> arguments) async {
           //server and channel both exist
 
           //is user already server member
-          bool checkUser = await errors.isServerMember(userObj, server, db);
+          bool checkUser = await errors.isServerMember(userObj, currServer, db);
 
           if (!checkUser) {
             //he is not a member
