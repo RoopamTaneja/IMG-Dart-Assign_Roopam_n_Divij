@@ -167,8 +167,7 @@ Future remove(users, servers, server, serverCurr, username, channel, role,
         modify.pull('members', {'$username': userID}),
       );
       print('Succefully Removed ' + username + " from " + channel);
-    }
-    if (server != null) {
+    } else if (server != null) {
       final currentUser = await users.findOne(where.eq('username', username));
       dynamic userID = currentUser?['_id'];
 
@@ -195,9 +194,12 @@ Future remove(users, servers, server, serverCurr, username, channel, role,
 
       await servers.update(
           where.eq('serverName', server), modify.unset('roles.$username'));
+      print('Succefully Removed ' + username + " from " + server);
+      return;
+    } else {
+      print('SyntaxError : Invalid Syntax Provide Server Name');
+      return;
     }
-    print('Succefully Removed ' + username + " from " + server);
-    return;
   }
 }
 
