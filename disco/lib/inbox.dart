@@ -40,8 +40,8 @@ void main(List<String> arguments) async {
           await messageDB.find(where.eq('receiver', receiver)).toList();
       int limitF = max(limit, 10);
       for (var i in messages.reversed) {
-        print('FROM : ' + i['sender']);
-        print('SENT ON : ' + i['time']);
+        print('FROM : ${i['sender']}');
+        print('SENT ON : ${i['time']}');
         print(i['message']);
         print('');
         limitF--;
@@ -65,8 +65,8 @@ void main(List<String> arguments) async {
           .toList();
       int limitF = max(limit, 10);
       for (var i in messages.reversed) {
-        print('FROM : ' + i['sender']);
-        print('SENT ON : ' + i['time']);
+        print('FROM :${i['sender']}');
+        print('SENT ON : ${i['time']}');
         print(i['message']);
         print('');
         limitF--;
@@ -130,8 +130,8 @@ void main(List<String> arguments) async {
 
         int limitF = max(limit, 10);
         for (var i in channelMessage.reversed) {
-          print('FROM : ' + i['sender']);
-          print('SENT ON : ' + i['time']);
+          print('FROM : ${i['sender']}');
+          print('SENT ON : ${i['time']}');
           print(i['message']);
           print('');
           limitF--;

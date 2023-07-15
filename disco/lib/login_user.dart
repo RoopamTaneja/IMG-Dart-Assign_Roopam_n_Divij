@@ -1,6 +1,7 @@
 import 'package:args/args.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/user.dart';
+import 'package:disco/models/errors.dart';
 
 void main(List<String> arguments) async {
   //creating new instance of database server
@@ -24,7 +25,7 @@ void main(List<String> arguments) async {
     //checking if some user is already logged in
 
     String username = currentSession['username'];
-    print('DuplicacyError : $username Already Logged In');
+    DuplicacyError.UserLoggedIn(username);
   }
   await db.close();
 }

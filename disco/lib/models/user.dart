@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'dart:io';
+import 'package:disco/models/errors.dart';
 
 class User {
   String? id;
@@ -59,10 +60,10 @@ class User {
 
         print('Succesfully Registered ');
       } else {
-        print('RegistrationError : Unsuccessful Login');
+        ProcessError.UnsuccessfulProcess();
       }
     } else {
-      print('LoginError :  Password do not Match');
+      ProcessError.PasswordMismatch();
     }
   }
 
@@ -71,7 +72,7 @@ class User {
 
     final user = await findUser(username, db);
     if (user == null) {
-      print('LoginError : User $username Not Found');
+      ProcessError.UserDoesNotExist(username);
       return;
     } else {
       //only allowing registered user to login
@@ -91,10 +92,10 @@ class User {
         if (result.isAcknowledged) {
           print("$username Logged in Successfully!");
         } else {
-          print('LoginError : Failure');
+          ProcessError.UnsuccessfulProcess();
         }
       } else {
-        print('LoginError : Incorrect Password');
+        ProcessError.PasswordMismatch();
       }
     }
   }
@@ -116,10 +117,10 @@ class User {
         await userSessions.deleteMany({});
         print('Logout success');
       } else {
-        print('LogoutError : Incorrect Password');
+        ProcessError.PasswordMismatch();
       }
     } else {
-      print('LogoutError : Unsuccesful Logout Attempt');
+      ProcessError.UnsuccessfulProcess();
     }
   }
 

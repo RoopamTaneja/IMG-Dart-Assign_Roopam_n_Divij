@@ -1,5 +1,6 @@
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/user.dart';
+import 'package:disco/models/errors.dart';
 
 void main(List<String> arguments) async {
   //creating instance of database server
@@ -16,7 +17,7 @@ void main(List<String> arguments) async {
     User userObj = User();
     await userObj.logout(username, db);
   } else {
-    print('LogoutError : No User Logged in!');
+    LoginError.NotLoggedIn();
   }
   await db.close();
 }

@@ -3,6 +3,7 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/checks.dart';
 import 'package:disco/models/user.dart';
 import 'package:disco/models/server.dart';
+import 'package:disco/models/errors.dart';
 import 'package:disco/models/sudo.dart';
 
 void main(List<String> arguments) async {
@@ -14,7 +15,7 @@ void main(List<String> arguments) async {
 
   if (currentSession == null) {
     //if no user logged in then no point in moving ahead
-    print('LoginError : No User Logged In');
+    LoginError.NotLoggedIn();
   } else {
     final parser = ArgParser();
     //add all parser options here for all fns
