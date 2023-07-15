@@ -30,11 +30,11 @@ class Checks {
     return !(await localServer.find(where.eq('channelName', channel)).isEmpty);
   }
 
-  Future<bool> isServerMember(User user, server, Db db) async {
+  Future<bool> isServerMember(User user, Server server, Db db) async {
     final servers = db.collection('servers');
     return !(await servers
         .find(where
-            .eq('serverName', server)
+            .eq('serverName', server.serverName)
             .eq('allMembers', {user.username: user.id}))
         .isEmpty);
   }
@@ -54,5 +54,13 @@ class Checks {
             .eq('channelName', channel)
             .eq('members', {user.username: user.id}))
         .isEmpty);
+  }
+
+  bool isMod(Server currServer, User user) {
+    var role = currServer.roles?[user.username];
+    if (role != 'mod' && role != 'creator') {
+      return false;
+    }
+    return true;
   }
 }

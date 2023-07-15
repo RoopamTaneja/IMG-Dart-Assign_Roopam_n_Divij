@@ -1,6 +1,5 @@
 import 'package:args/args.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'dart:core';
 import 'package:disco/models/checks.dart';
 import 'package:disco/models/user.dart';
 import 'package:disco/models/server.dart';

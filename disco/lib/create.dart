@@ -1,6 +1,5 @@
 import 'package:args/args.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'dart:core';
 import 'package:disco/models/checks.dart';
 import 'package:disco/models/user.dart';
 import 'package:disco/models/server.dart';
@@ -74,8 +73,8 @@ void main(List<String> arguments) async {
         //there is server, only channel needs to be added
 
         await currServer.setServerData(server, db);
-        var role = currServer.roles?[userObj.username];
-        if (role != 'mod' && role != 'creator') {
+        bool checkRole = errors.isMod(currServer, userObj);
+        if (!checkRole) {
           //user not mod or creator
           print(
               'Permission Denied : You are not a moderator or creator of $server');

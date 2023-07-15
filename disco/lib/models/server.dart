@@ -58,6 +58,34 @@ class Server {
         modify.push('inQueue', user.username));
   }
 
+  Future showChannels(Db db) async {
+    final serverCurrent = db.collection(serverName!);
+    List channelNames =
+        await serverCurrent.find().map((doc) => doc['channelName']).toList();
+    if (channelNames.isEmpty) {
+      print("No Channels Yet in $serverName.");
+    } else {
+      print("List of Channels in $serverName : ");
+      for (String i in channelNames) {
+        print(i);
+      }
+    }
+  }
+
+  void showMods() {
+    print('List of moderators : ');
+    int count = 0;
+    for (String i in roles!.keys) {
+      if (roles?[i] == 'moderator') {
+        print(i);
+        count++;
+      }
+    }
+    if (count == 0) {
+      print("No moderators in $serverName except creator : $creator");
+    }
+  }
+
   //private method
   Map<String, dynamic> _createServerDoc(sName, activeUser, activeUserId) {
     String sID = Uuid().v1();
