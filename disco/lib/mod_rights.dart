@@ -16,7 +16,7 @@ void main(List<String> arguments) async {
   if (currentSession == null) {
     //if no user logged in then no point in moving ahead
 
-    print('LoginError : No User Logged In');
+    LoginError.NotLoggedIn();
   } else {
     final parser = ArgParser();
     //add all parser options here for all fns

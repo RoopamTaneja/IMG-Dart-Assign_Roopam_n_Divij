@@ -42,6 +42,14 @@ class SyntaxError {
   static void ChannelWithoutServer() {
     print('${_s}Channel without Server Cannot Be Created');
   }
+
+  static void noServerName() {
+    print('${_s}Server Name is Needed');
+  }
+
+  static void noCommand() {
+    print("${_s}SyntaxError : No such command exists");
+  }
 }
 
 class ProcessError {

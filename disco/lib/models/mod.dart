@@ -36,7 +36,7 @@ class Moderator extends User {
 
     if (!checkUser) {
       //user does not exist
-      print('User Not Found');
+      ProcessError.UserDoesNotExist(username);
       return;
     } else {
       //user exists
@@ -89,7 +89,7 @@ class Moderator extends User {
             await errors.isChannelMember(newExit, channel, currServer, db);
 
         if (!isMember) {
-          print("ChannelError : Member Not Found");
+          ProcessError.UserNotInChannel(username);
           return;
         }
         await serverCurr.update(

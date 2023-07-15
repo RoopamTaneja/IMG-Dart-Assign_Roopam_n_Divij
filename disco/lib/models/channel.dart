@@ -1,3 +1,4 @@
+import 'package:disco/models/errors.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/server.dart';
 import 'package:disco/models/user.dart';
@@ -50,7 +51,7 @@ class Channel {
     if (!memberList.any((member) =>
         member.containsKey(user.username) &&
         member[user.username] == user.id)) {
-      print('ChannelError : No User Found');
+      ProcessError.UserNotInChannel(user.username);
 
       return;
     }

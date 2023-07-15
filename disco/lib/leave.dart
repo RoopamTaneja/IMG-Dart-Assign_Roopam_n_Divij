@@ -4,6 +4,7 @@ import 'package:disco/models/checks.dart';
 import 'package:disco/models/user.dart';
 import 'package:disco/models/server.dart';
 import 'package:disco/models/channel.dart';
+import 'package:disco/models/errors.dart';
 
 void main(List<String> arguments) async {
   //creating a new instance of the database server
@@ -16,7 +17,7 @@ void main(List<String> arguments) async {
 
   if (currentSession == null) {
     //if no user logged in then no point in moving ahead
-    print('LoginError : No User Logged In');
+    LoginError.NotLoggedIn();
   } else {
     final parser = ArgParser();
     parser.addOption('server', abbr: 's', help: 'LEAVE A SERVER');
@@ -32,7 +33,7 @@ void main(List<String> arguments) async {
     Checks errors = Checks();
     bool check = await errors.serverExists(server, db);
     if (!check) {
-      print('ServerError : No Such Server');
+      ProcessError.ServerDoesNotExist(server);
     } else {
       Server currServer = Server();
       await currServer.setServerData(server, db);
@@ -41,7 +42,7 @@ void main(List<String> arguments) async {
         bool checkChannel = await errors.channelExists(channel, currServer, db);
         if (!checkChannel) {
           //channel does not exist
-          print('ChannelError : Channel Does Not Exist in $server');
+          ProcessError.ChannelDoesNotExist(channel);
         } else {
           Channel currChannel = Channel();
           await currChannel.setChannelData(server, channel, db);
@@ -50,7 +51,7 @@ void main(List<String> arguments) async {
       } else if (server != null) {
         await currServer.leaveServer(userObj, db);
       } else {
-        print('SyntaxError : Invalid Syntax Provide Server Name');
+        SyntaxError.noServerName();
       }
     }
   }

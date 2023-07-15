@@ -4,6 +4,7 @@ import 'package:disco/models/checks.dart';
 import 'package:disco/models/user.dart';
 import 'package:disco/models/server.dart';
 import 'package:disco/models/channel.dart';
+import 'package:disco/models/errors.dart';
 
 //dart bin/disco.dart join -s servername -c channelname
 
@@ -16,7 +17,7 @@ void main(List<String> arguments) async {
 
   if (currentSession == null) {
     //if no user logged in then no point in moving ahead
-    print('LoginError : No User Logged In');
+    LoginError.NotLoggedIn();
   } else {
     final parser = ArgParser();
     parser.addOption("server",
@@ -37,7 +38,7 @@ void main(List<String> arguments) async {
       bool check = await errors.serverExists(server, db);
       if (!check) {
         //server doesn't exist
-        print('ServerError: Server Does Not Exist');
+        ProcessError.ServerDoesNotExist(server);
       } else {
         //server exists
         Server currServer = Server();
@@ -58,7 +59,7 @@ void main(List<String> arguments) async {
           } else {
             //he is already in queue
             print(
-                'ServerError: Already in Queue for Approval, Try Contacting Moderator or Creator');
+                'DuplicacyError : Already in Queue for Approval, Try Contacting Moderator or Creator');
           }
         } else {
           //yes he is already member
@@ -72,7 +73,7 @@ void main(List<String> arguments) async {
 
       if (!check) {
         //server doesn't exist
-        print('ServerError: Server Does Not Exist');
+        ProcessError.ServerDoesNotExist(server);
       } else {
         //server exists
         Server currServer = Server();
@@ -81,7 +82,7 @@ void main(List<String> arguments) async {
         bool checkChannel = await errors.channelExists(channel, currServer, db);
         if (!checkChannel) {
           //channel does not exist
-          print('ChannelError : Channel Does Not Exist in $server');
+          ProcessError.ChannelDoesNotExist(channel);
         } else {
           //server and channel both exist
 
@@ -103,7 +104,7 @@ void main(List<String> arguments) async {
             } else {
               //he is already in queue
               print(
-                  'ServerError: Already in Queue for Approval of Joining $server. Try Contacting Mod or Creator');
+                  'DuplicacyError : Already in Queue for Approval of Joining $server. Try Contacting Mod or Creator');
             }
           } else {
             //yes he is server member
@@ -130,7 +131,7 @@ void main(List<String> arguments) async {
       }
     } else {
       //server == null
-      print("SyntaxError: Server Name is Needed");
+      SyntaxError.noServerName();
     }
   }
 

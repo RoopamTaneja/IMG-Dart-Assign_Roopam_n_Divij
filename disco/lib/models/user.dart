@@ -138,7 +138,7 @@ class User {
     var hashedPass = _hashPass(pass);
 
     if (_hash != hashedPass) {
-      print('Incorrect Password');
+      ProcessError.PasswordMismatch();
       return;
     }
 

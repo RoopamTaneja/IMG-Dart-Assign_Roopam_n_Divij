@@ -1,3 +1,4 @@
+import 'package:disco/models/errors.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/user.dart';
 
@@ -80,7 +81,7 @@ class Server {
     if (!memberList.any((member) =>
         member.containsKey(user.username) &&
         member[user.username] == user.id)) {
-      print('ServerError : No User Found');
+      ProcessError.UserNotInServer(user.username);
       return;
     }
 

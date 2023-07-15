@@ -38,7 +38,7 @@ void main(List<String> arguments) async {
 
     if (!checkOwner) {
       //u are not owner
-      print('Permission Denied : You are not the owner of $server');
+      print('PermissionDeniedError : You Are Not The Creator Of $server');
     } else {
       Server currServer = Server();
       await currServer.setServerData(server, db);
@@ -52,7 +52,7 @@ void main(List<String> arguments) async {
       } else if (command == "removeMod") {
         await owner.removeMod(username, db);
       } else {
-        print("SyntaxError : No such command exists");
+        SyntaxError.noCommand();
       }
     }
   }
