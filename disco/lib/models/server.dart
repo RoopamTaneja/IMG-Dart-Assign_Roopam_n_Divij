@@ -24,11 +24,24 @@ class Server {
     inQueue = inQ;
   }
 
-  Future? findServer(String server, DbCollection servers) async {
+  Future? findServer(String server, Db db) async {
+    final servers = db.collection('servers');
     return await servers.findOne(where.eq('serverName', server));
   }
 
-  Future createServer(User creator, String server, Db db) async {
+  Future setServerData(String sName, Db db) async {
+    final server = await findServer(sName, db);
+    serverName = sName;
+    serverID = server['serverID'];
+    date = server['dateOfCreation'];
+    creator = server['creator'];
+    userID = server['userID'];
+    roles = server['roles'];
+    allMembers = server['allMembers'];
+    inQueue = server['inQueue'];
+  }
+
+  Future createServer(User creator, server, Db db) async {
     final servers = db.collection('servers');
     final document = _createServerDoc(server, creator.username, creator.id);
 
@@ -39,16 +52,10 @@ class Server {
     return result;
   }
 
-  Future setServerData(String sName, DbCollection servers) async {
-    final server = await findServer(sName, servers);
-    serverName = sName;
-    serverID = server['serverID'];
-    date = server['dateOfCreation'];
-    creator = server['creator'];
-    userID = server['userID'];
-    roles = server['roles'];
-    allMembers = server['allMembers'];
-    inQueue = server['inQueue'];
+  Future addInQueue(User user, Db db) async {
+    final servers = db.collection('servers');
+    await servers.update(where.eq('serverName', serverName),
+        modify.push('inQueue', user.username));
   }
 
   //private method

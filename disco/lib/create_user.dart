@@ -19,15 +19,14 @@ void main(List<String> arguments) async {
     final parsed = parser.parse(arguments);
     String username = parsed['username'] as String;
 
-    //registering the user in database USERAUTH
-    final userAuth = db.collection('userAuth');
+    //registering the user in database
     Checks errors = Checks();
-    bool userExists = await errors.userExists(username, userAuth);
+    bool userExists = await errors.userExists(username, db);
 
     //only registering if user does not exist
     if (!userExists) {
       User userObj = User();
-      await userObj.register(username, userAuth);
+      await userObj.register(username, db);
     } else {
       print('DuplicacyError : User Already Exists');
     }
