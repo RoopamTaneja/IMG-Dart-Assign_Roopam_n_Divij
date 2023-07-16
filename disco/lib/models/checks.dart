@@ -63,4 +63,11 @@ class Checks {
     }
     return true;
   }
+
+  Future<bool> isOwner(User user, server, Db db) async {
+    final servers = db.collection('servers');
+    return !(await servers
+        .find(where.eq('serverName', server).eq('userId', user.id))
+        .isEmpty);
+  }
 }

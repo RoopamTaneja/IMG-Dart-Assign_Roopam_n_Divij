@@ -24,10 +24,11 @@ class Moderator extends User {
     }
   }
 
-  Future admit(username, Server currServer, Db db) async {
+  Future admit(username, Db db) async {
     //dart bin/disco.dart admit -u username -s servername
 
     final servers = db.collection('servers');
+    final currServer = myServer;
 
     //server exists
     Checks errors = Checks();
@@ -35,7 +36,7 @@ class Moderator extends User {
 
     if (!checkUser) {
       //user does not exist
-      print('User Not Found');
+      ProcessError.UserDoesNotExist(username);
       return;
     } else {
       //user exists
@@ -43,27 +44,28 @@ class Moderator extends User {
       User newEntry = User();
       await newEntry.setUserData(username, db);
 
-      var role = currServer.roles?[newEntry.username];
+      var role = currServer?.roles?[newEntry.username];
       if (role != null) {
         //yes already member
         DuplicacyError.UserInServer(username);
         return;
       }
       //no he is not so make him a member
-      await servers.update(where.eq('serverName', currServer.serverName),
+      await servers.update(where.eq('serverName', currServer?.serverName),
           modify.push('allMembers', {username: newEntry.id}));
-      await servers.update(where.eq('serverName', currServer.serverName),
+      await servers.update(where.eq('serverName', currServer?.serverName),
           modify.pull('inQueue', username));
-      await servers.update(where.eq('serverName', currServer.serverName),
+      await servers.update(where.eq('serverName', currServer?.serverName),
           modify.set('roles.$username', 'peasant'));
       print(
-          "$username added as member of ${currServer.serverName} successfully.");
+          "$username added as member of ${currServer?.serverName} successfully.");
     }
   }
 
-  Future remove(username, channel, Server currServer, Db db) async {
+  Future remove(username, channel, Db db) async {
     final servers = db.collection('servers');
-    var serverCurr = db.collection(currServer.serverName!);
+    final currServer = myServer;
+    var serverCurr = db.collection(currServer!.serverName!);
 
     //server exists
     Checks errors = Checks();
@@ -87,14 +89,15 @@ class Moderator extends User {
             await errors.isChannelMember(newExit, channel, currServer, db);
 
         if (!isMember) {
-          print("ChannelError : Member Not Found");
+          ProcessError.UserNotInChannel(username);
           return;
         }
         await serverCurr.update(
           where.eq('channelName', channel),
           modify.pull('members', {username: newExit.id}),
         );
-        print('Successfully Removed $username from Channel $channel');
+        print(
+            'Successfully Removed $username from Channel $channel of Server ${currServer.serverName}');
       } else {
         bool isMember = await errors.isServerMember(newExit, currServer, db);
 
@@ -102,12 +105,16 @@ class Moderator extends User {
           ProcessError.UserNotInServer(username);
           return;
         }
-        await serverCurr.update(
-          where,
-          modify.pullAll('members', [
-            {newExit.username: newExit.id}
-          ]),
-        );
+        // ignore: await_only_futures
+        final channelCursor = await serverCurr.find();
+        await for (var channel in channelCursor) {
+          await serverCurr.update(
+            where.eq('channelName', channel['channelName']),
+            modify.pullAll('members', [
+              {newExit.username: newExit.id}
+            ]),
+          );
+        }
         await servers.update(
           where.eq('serverName', currServer.serverName),
           modify.pullAll('allMembers', [

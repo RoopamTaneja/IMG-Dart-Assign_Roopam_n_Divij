@@ -1,5 +1,7 @@
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/user.dart';
+import 'package:disco/models/checks.dart';
+import 'package:disco/models/errors.dart';
 
 class Server {
   String? serverName;
@@ -70,6 +72,116 @@ class Server {
         print(i);
       }
     }
+  }
+
+  Future sendMsgInChannel(msg, channel, User senderObj, Db db) async {
+    var localServer = db.collection(serverName!);
+    var sender = senderObj.username;
+    Checks errors = Checks();
+    bool checkUser = await errors.isServerMember(senderObj, this, db);
+    if (!checkUser) {
+      ProcessError.UserNotInServer(sender);
+      return;
+    }
+    bool checkChannel = await errors.channelExists(channel, this, db);
+    if (!checkChannel) {
+      ProcessError.ChannelDoesNotExist(channel);
+      return;
+    }
+
+    bool checkInChannel =
+        await errors.isChannelMember(senderObj, channel, this, db);
+    if (!checkInChannel) {
+      ProcessError.UserNotInChannel(sender);
+      return;
+    }
+
+    final document = {
+      'sender': sender,
+      'time': DateTime.now().toString(),
+      'message': msg
+    };
+    await localServer.update(
+        where.eq('channelName', channel), modify.push('messages', document));
+
+    print('Message Sent Successfully');
+  }
+
+  Future showChannelMsg(channel, limitF, User receiverObj, Db db) async {
+    var serverDb = db.collection(serverName!);
+    var receiver = receiverObj.username;
+
+    Checks errors = Checks();
+    bool checkUser = await errors.isServerMember(receiverObj, this, db);
+    if (!checkUser) {
+      ProcessError.UserNotInServer(receiver);
+      return;
+    }
+
+    bool checkChannel = await errors.channelExists(channel, this, db);
+    if (!checkChannel) {
+      ProcessError.ChannelDoesNotExist(channel);
+      return;
+    }
+
+    bool checkInChannel =
+        await errors.isChannelMember(receiverObj, channel, this, db);
+    if (!checkInChannel) {
+      ProcessError.UserNotInChannel(receiver);
+      return;
+    }
+
+    final channelDoc = await serverDb.findOne(where.eq('channelName', channel));
+    List channelMessage = channelDoc?['messages'];
+    if (channelMessage.isNotEmpty) {
+      for (var i in channelMessage.reversed) {
+        print('FROM : ${i['sender']}');
+        print('SENT ON : ${i['time']}');
+        print(i['message']);
+        print('');
+        limitF--;
+        if (limitF == 0) {
+          break;
+        }
+      }
+    } else {
+      print('No Messages Found in $channel of $serverName');
+    }
+  }
+
+  Future leaveServer(User user, Db db) async {
+    final servers = db.collection('servers');
+    var localServer = db.collection(serverName!);
+    List memberList = allMembers!;
+
+    if (!memberList.any((member) =>
+        member.containsKey(user.username) &&
+        member[user.username] == user.id)) {
+      ProcessError.UserNotInServer(user.username);
+      return;
+    }
+
+    // ignore: await_only_futures
+    final channelCursor = await localServer.find();
+    await for (var channel in channelCursor) {
+      await localServer.update(
+        where.eq('channelName', channel['channelName']),
+        modify.pullAll('members', [
+          {user.username: user.id}
+        ]),
+      );
+    }
+    await servers.update(
+      where.eq('serverName', serverName),
+      modify.pullAll('allMembers', [
+        {user.username: user.id}
+      ]),
+    );
+
+    await servers.update(where.eq('serverName', serverName),
+        modify.unset('roles.${user.username}'));
+
+    print('Successfully Exited from $serverName');
   }
 
   void showMods() {
