@@ -46,7 +46,7 @@ void main(List<String> arguments) async {
         } else {
           Channel currChannel = Channel();
           await currChannel.setChannelData(server, channel, db);
-          currChannel.leaveChannel(userObj, db);
+          await currChannel.leaveChannel(userObj, db);
         }
       } else if (server != null) {
         await currServer.leaveServer(userObj, db);

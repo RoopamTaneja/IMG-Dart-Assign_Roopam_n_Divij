@@ -47,8 +47,32 @@ class SyntaxError {
     print('${_s}Server Name is Needed');
   }
 
+  static void noChannelName() {
+    print('${_s}Channel Name is Needed');
+  }
+
   static void noCommand() {
-    print("${_s}SyntaxError : No such command exists");
+    print("${_s}No such command exists");
+  }
+
+  static void noMessage() {
+    print("${_s}No Message to Send");
+  }
+
+  static void noRecipient() {
+    print("${_s}Recipient Needs To Be Entered");
+  }
+
+  static void MultipleRecipients() {
+    print("${_s}Two Receivers Not Possible");
+  }
+
+  static void MultipleInbox() {
+    print("${_s}Two Modes of Inbox Not Possible");
+  }
+
+  static void noInbox() {
+    print("${_s}Mode of Inbox Needs To Be Entered");
   }
 }
 
@@ -80,5 +104,9 @@ class ProcessError {
 
   static void UserNotInServer(username) {
     print('$_s$username Not In Server');
+  }
+
+  static void RecipientError() {
+    print("$_s Sender Cannot Be Recipient");
   }
 }

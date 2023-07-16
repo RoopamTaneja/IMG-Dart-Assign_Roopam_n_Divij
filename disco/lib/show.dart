@@ -19,6 +19,12 @@ void main(List<String> arguments) async {
   } else if (currentSession == null) {
     //if no user logged in then no point in moving ahead
     LoginError.NotLoggedIn();
+  } else if (arguments[0] == "showUser") {
+    final currentUser = currentSession['username'];
+
+    User userObj = User();
+    await userObj.setUserData(currentUser, db);
+    userObj.getData;
   } else {
     final parser = ArgParser();
     //add all parser options here for all fns

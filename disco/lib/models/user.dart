@@ -3,6 +3,7 @@ import 'package:crypto/crypto.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'dart:io';
 import 'package:disco/models/errors.dart';
+import 'package:disco/models/checks.dart';
 
 class User {
   String? id;
@@ -124,6 +125,91 @@ class User {
     }
   }
 
+  Future sendDM(msg, receiver, Db db) async {
+    final messageDB = db.collection('messages');
+
+    if (receiver == username) {
+      ProcessError.RecipientError();
+      return;
+    }
+
+    Checks errors = Checks();
+    bool checkReceiver = await errors.userExists(receiver, db);
+    if (!checkReceiver) {
+      ProcessError.UserDoesNotExist(receiver);
+      return;
+    }
+
+    final document = {
+      'sender': username,
+      'receiver': receiver,
+      'time': DateTime.now().toString(),
+      'message': msg
+    };
+    final result =
+        await messageDB.insertOne(document..['_id'] = ObjectId().toHexString());
+    if (result.isAcknowledged) {
+      print('Succesfully Sent');
+    } else {
+      ProcessError.UnsuccessfulProcess();
+    }
+  }
+
+  Future showDM(sender, limitF, Db db) async {
+    final messageDB = db.collection('messages');
+    final receiver = username;
+
+    if (sender == "ALL") {
+      final messages =
+          await messageDB.find(where.eq('receiver', receiver)).toList();
+      if (messages.isNotEmpty) {
+        for (var i in messages.reversed) {
+          print('FROM : ${i['sender']}');
+          print('SENT ON : ${i['time']}');
+          print(i['message']);
+          print('');
+          limitF--;
+          if (limitF == 0) {
+            break;
+          }
+        }
+      } else {
+        ("No Personal Messages Found in Inbox.");
+      }
+      return;
+    }
+
+    if (sender == receiver) {
+      ProcessError.RecipientError();
+      return;
+    }
+
+    //sender != "ALL" && sender != null
+    Checks errors = Checks();
+    bool checkSender = await errors.userExists(sender, db);
+    if (!checkSender) {
+      ProcessError.UserDoesNotExist(sender);
+      return;
+    }
+    final messages = await messageDB
+        .find(where.eq('receiver', receiver).and(where.eq('sender', sender)))
+        .toList();
+    if (messages.isNotEmpty) {
+      for (var i in messages.reversed) {
+        print('FROM :${i['sender']}');
+        print('SENT ON : ${i['time']}');
+        print(i['message']);
+        print('');
+        limitF--;
+        if (limitF == 0) {
+          break;
+        }
+      }
+    } else {
+      ("No Personal Messages Found in Inbox From $sender.");
+    }
+  }
+
   Future deleteAccount(Db db) async {
     final userSessions = db.collection('userSession');
     final users = db.collection('userAuth');
@@ -147,7 +233,7 @@ class User {
     await for (var server in cursor) {
       var memberList = server['allMembers'];
       List<dynamic> inQueueList = server['inQueue'];
-      var localServer = db.collection(server['serverName']);
+      var localServer = db.collection('${server['serverName']}');
 
       if (!memberList.any(
           (member) => member.containsKey(username) && member[username] == id)) {
@@ -159,20 +245,17 @@ class User {
         }
         continue;
       }
-      bool changeCreator;
-      if (server['roles']['username'] == 'creator') {
-        changeCreator = true;
-      } else {
-        changeCreator = false;
+
+      // ignore: await_only_futures
+      final channelCursor = await localServer.find();
+      await for (var channel in channelCursor) {
+        await localServer.update(
+          where.eq('channelName', channel['channelName']),
+          modify.pullAll('members', [
+            {username: id}
+          ]),
+        );
       }
-
-      await localServer.update(
-        where,
-        modify.pullAll('members', [
-          {username: id}
-        ]),
-      );
-
       await servers.update(
         where.eq('_id', server['_id']),
         modify.pullAll('allMembers', [
@@ -184,20 +267,6 @@ class User {
         where.eq('_id', server['_id']),
         modify.unset('roles.$username'),
       );
-
-      if (changeCreator == true) {
-        Map<dynamic, dynamic> roles = server['roles'];
-
-        var newCreator = await roles.keys
-            .firstWhere((key) => roles[key] == 'moderator', orElse: () => null);
-
-        newCreator ??= await roles.keys
-            .firstWhere((key) => roles[key] == 'peasant', orElse: () => null);
-        if (newCreator != null) {
-          await servers.update(where.eq('_id', server['_id']),
-              modify.set('roles.$newCreator', 'creator'));
-        }
-      }
     }
 
     await users.deleteOne(where.eq('username', username));

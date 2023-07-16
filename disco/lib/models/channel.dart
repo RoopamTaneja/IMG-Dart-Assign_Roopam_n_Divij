@@ -6,7 +6,7 @@ import 'package:disco/models/user.dart';
 class Channel {
   String? channelName;
   String? serverName;
-  List<Map<dynamic, dynamic>>? members;
+  List<dynamic>? members;
   String? type;
   List<dynamic>? messages;
 

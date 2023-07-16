@@ -105,12 +105,16 @@ class Moderator extends User {
           ProcessError.UserNotInServer(username);
           return;
         }
-        await serverCurr.update(
-          where,
-          modify.pullAll('members', [
-            {newExit.username: newExit.id}
-          ]),
-        );
+        // ignore: await_only_futures
+        final channelCursor = await serverCurr.find();
+        await for (var channel in channelCursor) {
+          await serverCurr.update(
+            where.eq('channelName', channel['channelName']),
+            modify.pullAll('members', [
+              {newExit.username: newExit.id}
+            ]),
+          );
+        }
         await servers.update(
           where.eq('serverName', currServer.serverName),
           modify.pullAll('allMembers', [
