@@ -2,7 +2,7 @@
 
 # CLI application for Discord
 
-**A Command Line Interface Application project to stimulate discord features built solely on Dart.**
+**A Command Line Interface Application project to simulate discord features built solely on Dart.**
 
 *A learning project developed by Divij and Roopam for enhancing understanding of Dart, its packages and OOPs concepts as part of IMG assignment.*<br>
 External Dart packages used : mongo_dart, args, crypto
