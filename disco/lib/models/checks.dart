@@ -4,6 +4,18 @@ import 'package:disco/models/server.dart';
 
 class Checks {
   Checks();
+  Future<bool> isValidPassword(String password) async {
+    // Define the pattern using a regular expression
+    RegExp passwordPattern =
+        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
+
+    // Match the pattern against the password
+    if (passwordPattern.hasMatch(password)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   Future<bool> userLoggedIn(Db db) async {
     final userSessions = db.collection('userSession');

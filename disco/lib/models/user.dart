@@ -35,13 +35,19 @@ class User {
   }
 
   Future register(String name, Db db) async {
+    Checks check = Checks();
     final userAuth = db.collection('userAuth');
-
+    print(
+        "Password must satify the following characters:\n-> At least one uppercase letter\n-> At least one lowercase letter\n-> At least one digit\n-> Minimum length of 8 characters ");
     stdout.write("Enter Password : ");
     stdin.echoMode = false;
     var pass = stdin.readLineSync().toString();
     stdin.echoMode = true;
     print('');
+    if (!(await check.isValidPassword(pass))) {
+      ProcessError.PasswordMismatch();
+      return;
+    }
     stdout.write("Confirm Password : ");
     stdin.echoMode = false;
     var passCon = stdin.readLineSync().toString();
