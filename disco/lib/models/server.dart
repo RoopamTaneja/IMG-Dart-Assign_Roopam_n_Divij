@@ -76,6 +76,7 @@ class Server {
 
   Future sendMsgInChannel(msg, channel, User senderObj, Db db) async {
     var localServer = db.collection(serverName!);
+
     var sender = senderObj.username;
     Checks errors = Checks();
     bool checkUser = await errors.isServerMember(senderObj, this, db);
@@ -88,11 +89,18 @@ class Server {
       ProcessError.ChannelDoesNotExist(channel);
       return;
     }
-
+    var localChannel =
+        await localServer.findOne(where.eq('channelName', channel)) ?? {};
+    List permittedRoles = localChannel['permittedRoles'];
     bool checkInChannel =
         await errors.isChannelMember(senderObj, channel, this, db);
     if (!checkInChannel) {
       ProcessError.UserNotInChannel(sender);
+      return;
+    }
+
+    if (!permittedRoles.contains(roles?[sender])) {
+      ProcessError.ChannelRightsError();
       return;
     }
 
