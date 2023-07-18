@@ -113,4 +113,8 @@ class ProcessError {
   static void RecipientError() {
     print("$_s Sender Cannot Be Recipient");
   }
+
+  static void ChannelRightsError() {
+    print('$_s You Do Not Have Channel Rights');
+  }
 }

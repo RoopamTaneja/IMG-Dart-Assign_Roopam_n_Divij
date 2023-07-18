@@ -9,11 +9,29 @@ class Channel {
   List<dynamic>? members;
   String? type;
   List<dynamic>? messages;
+  List<dynamic> permittedRoles = [];
+  List<dynamic>? permittedMembers;
 
   Channel();
 
-  Future createChannel(User creator, channel, type, server, Db db) async {
+  Future createChannel(User creator, channel, type, server, Db db, bool c,
+      bool m, bool p) async {
     var localServer = db.collection(server);
+    List<String> permitted = [];
+    if (c) {
+      permittedRoles.add('creator');
+    }
+    if (m) {
+      permittedRoles.add('moderator');
+    }
+    if (p) {
+      permittedRoles.add('peasant');
+    }
+    if (!c && !m && !p) {
+      permittedRoles.add('creator');
+      permittedRoles.add('moderator');
+      permittedRoles.add('peasant');
+    }
 
     final document =
         _createChannelDoc(channel, creator.username, creator.id, type);
@@ -72,6 +90,7 @@ class Channel {
         {activeUser: activeUserId}
       ],
       'type': type,
+      'permittedRoles': permittedRoles,
       'messages': []
     };
     return document;
