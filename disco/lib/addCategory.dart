@@ -17,8 +17,7 @@ void main(List<String> arguments) async {
     final parser = ArgParser();
     parser.addOption("server",
         abbr: "s", help: "CREATE SERVER/CHANNEL WITHIN SERVER");
-    parser.addOption("category",
-        abbr: "cg", help: "ADD CATEGORY WITHIN SERVER");
+    parser.addOption("category", abbr: "g", help: "ADD CATEGORY WITHIN SERVER");
     parser.addFlag("creator",
         abbr: "C", help: "ALLOW CREATOR TO ACCESS CHANNELS");
     parser.addFlag("moderator",
@@ -34,7 +33,7 @@ void main(List<String> arguments) async {
     final p = parsed['peasant'] as bool;
 
     Category newCategory = Category();
-    newCategory.createCategory(server, category, db, c, m, p);
+    await newCategory.createCategory(server, category, db, c, m, p);
   }
   db.close();
 }

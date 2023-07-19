@@ -34,12 +34,8 @@ class Category {
       await db.createCollection('$server:categories');
       DbCollection categories = db.collection('$server:categories');
       permitted = await Checks.permittedList(c, m, p);
-      Server sample = Server();
-      await sample.setServerData(server, db);
-      myServer = sample;
       final document = {
         'categoryName': category,
-        'serverName': server,
         'channelList': channels,
         'permittedRoles': permitted
       };
