@@ -81,7 +81,7 @@ void main(List<String> arguments) async {
 
         bool checkChannel = await errors.channelExists(channel, currServer, db);
         if (!checkChannel) {
-          //channel does not exist
+          //channel does not existS
           ProcessError.ChannelDoesNotExist(channel);
         } else {
           //server and channel both exist

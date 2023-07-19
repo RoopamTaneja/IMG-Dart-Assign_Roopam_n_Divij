@@ -82,4 +82,23 @@ class Checks {
         .find(where.eq('serverName', server).eq('userId', user.id))
         .isEmpty);
   }
+
+  Future<List> permittedList(bool c, bool m, bool p) async {
+    List permittedRoles = [];
+    if (c) {
+      permittedRoles.add('creator');
+    }
+    if (m) {
+      permittedRoles.add('moderator');
+    }
+    if (p) {
+      permittedRoles.add('peasant');
+    }
+    if (!c && !m && !p) {
+      permittedRoles.add('creator');
+      permittedRoles.add('moderator');
+      permittedRoles.add('peasant');
+    }
+    return permittedRoles;
+  }
 }

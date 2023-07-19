@@ -73,8 +73,8 @@ void main(List<String> arguments) async {
 
         final res1 = await currServer.createServer(userObj, server, db);
 
-        final res2 = await newChannel.createChannel(
-            userObj, channel, type, server, db, Creator, Moderator, Peasant);
+        final res2 = await newChannel.createChannel(userObj, channel, type,
+            server, db, Creator, Moderator, Peasant, activeUser);
 
         if (res1.isAcknowledged && res2.isAcknowledged) {
           print('Successfully Created Channel $channel In Server $server');
@@ -102,7 +102,7 @@ void main(List<String> arguments) async {
             //channel not present can be added
 
             final result = await newChannel.createChannel(userObj, channel,
-                type, server, db, Creator, Moderator, Peasant);
+                type, server, db, Creator, Moderator, Peasant, activeUser);
 
             if (result.isAcknowledged) {
               print('Successfully Created Channel $channel');
