@@ -1,13 +1,15 @@
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/server.dart';
 import 'package:disco/models/channel.dart';
+import 'package:disco/models/checks.dart';
+import 'package:disco/models/errors.dart';
 
 class Category {
   Server? myServer;
   List<Channel> channels = [];
-  List<String> permitted = [];
+  List<dynamic> permitted = [];
 
-  Future? findCategory(category, Db db) async {
+  Future<Map<String, dynamic>?> findCategory(category, Db db) async {
     var categories = db.collection('categories');
     return await categories.findOne(where.eq('categoryName', category));
   }
@@ -21,9 +23,30 @@ class Category {
     Server sample = Server();
     await sample.setServerData(server, db);
     newCategory.myServer = await sample.findServer(server, db);
-    ;
     newCategory.channels = categoryDoc?['channels'];
     newCategory.permitted = categoryDoc?['permitted'];
     return newCategory;
+  }
+
+  Future<void> createCategory(
+      String server, String category, Db db, bool c, bool m, bool p) async {
+    if (await Checks.serverExists(server, db)) {
+      await db.createCollection('$server:categories');
+      DbCollection categories = db.collection('$server:categories');
+      permitted = await Checks.permittedList(c, m, p);
+      Server sample = Server();
+      await sample.setServerData(server, db);
+      myServer = sample;
+      final document = {
+        'categoryName': category,
+        'serverName': server,
+        'channelList': channels,
+        'permittedRoles': permitted
+      };
+      await categories.insertOne(document..['_id'] = ObjectId().toHexString());
+      print('Category $category added in Server $server');
+    } else {
+      ProcessError.ServerDoesNotExist(server);
+    }
   }
 }

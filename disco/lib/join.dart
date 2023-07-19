@@ -32,10 +32,9 @@ void main(List<String> arguments) async {
     User userObj = User();
     await userObj.setUserData(activeUser, db);
 
-    Checks errors = Checks();
     if (channel == null && server != null) {
       //only server name given
-      bool check = await errors.serverExists(server, db);
+      bool check = await Checks.serverExists(server, db);
       if (!check) {
         //server doesn't exist
         ProcessError.ServerDoesNotExist(server);
@@ -45,11 +44,11 @@ void main(List<String> arguments) async {
         await currServer.setServerData(server, db);
 
         //is user already server member
-        bool checkUser = await errors.isServerMember(userObj, currServer, db);
+        bool checkUser = await Checks.isServerMember(userObj, currServer, db);
 
         if (!checkUser) {
           //he is not a member
-          bool queueCheck = await errors.presentInQueue(userObj, server, db);
+          bool queueCheck = await Checks.presentInQueue(userObj, server, db);
 
           //then check if he is already in queue
           if (!queueCheck) {
@@ -69,7 +68,7 @@ void main(List<String> arguments) async {
     } else if (channel != null && server != null) {
       //both server and channel name is supplied
 
-      bool check = await errors.serverExists(server, db);
+      bool check = await Checks.serverExists(server, db);
 
       if (!check) {
         //server doesn't exist
@@ -79,7 +78,7 @@ void main(List<String> arguments) async {
         Server currServer = Server();
         await currServer.setServerData(server, db);
 
-        bool checkChannel = await errors.channelExists(channel, currServer, db);
+        bool checkChannel = await Checks.channelExists(channel, currServer, db);
         if (!checkChannel) {
           //channel does not existS
           ProcessError.ChannelDoesNotExist(channel);
@@ -87,12 +86,12 @@ void main(List<String> arguments) async {
           //server and channel both exist
 
           //is user already server member
-          bool checkUser = await errors.isServerMember(userObj, currServer, db);
+          bool checkUser = await Checks.isServerMember(userObj, currServer, db);
 
           if (!checkUser) {
             //he is not a member
 
-            bool queueCheck = await errors.presentInQueue(userObj, server, db);
+            bool queueCheck = await Checks.presentInQueue(userObj, server, db);
 
             //then check if he is already in queue
             if (!queueCheck) {
@@ -111,7 +110,7 @@ void main(List<String> arguments) async {
 
             //is he channel member
             bool checkInChannel =
-                await errors.isChannelMember(userObj, channel, currServer, db);
+                await Checks.isChannelMember(userObj, channel, currServer, db);
 
             if (!checkInChannel) {
               //no he is not

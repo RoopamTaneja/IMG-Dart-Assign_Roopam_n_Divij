@@ -5,8 +5,7 @@ import 'package:disco/models/server.dart';
 enum Permitted { creator, moderator, peasant }
 
 class Checks {
-  Checks();
-  Future<bool> isValidPassword(String password) async {
+  static Future<bool> isValidPassword(String password) async {
     // Define the pattern using a regular expression
     RegExp passwordPattern =
         RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
@@ -19,38 +18,38 @@ class Checks {
     }
   }
 
-  Future<bool> userLoggedIn(Db db) async {
+  static Future<bool> userLoggedIn(Db db) async {
     final userSessions = db.collection('userSession');
     final currentSession = await userSessions.findOne();
     bool check = (currentSession != null);
     return check;
   }
 
-  Future<bool> userExists(String username, Db db) async {
+  static Future<bool> userExists(String username, Db db) async {
     final userAuth = db.collection('userAuth');
     final user = await userAuth.findOne(where.eq('username', username));
     bool check = (user != null);
     return check;
   }
 
-  Future<bool> serverExists(server, Db db) async {
+  static Future<bool> serverExists(server, Db db) async {
     final servers = db.collection('servers');
     return !(await servers.find(where.eq('serverName', server)).isEmpty);
   }
 
-  Future<bool> channelExists(channel, Server server, Db db) async {
+  static Future<bool> channelExists(channel, Server server, Db db) async {
     var localServer = db.collection(server.serverName!);
 
     return !(await localServer.find(where.eq('channelName', channel)).isEmpty);
   }
 
-  Future<bool> categoryExists(category, Db db) async {
+  static Future<bool> categoryExists(category, Db db) async {
     var categories = db.collection('categories');
 
     return !(await categories.find(where.eq('categoryName', category)).isEmpty);
   }
 
-  Future<bool> isServerMember(User user, Server server, Db db) async {
+  static Future<bool> isServerMember(User user, Server server, Db db) async {
     final servers = db.collection('servers');
     return !(await servers
         .find(where
@@ -59,14 +58,15 @@ class Checks {
         .isEmpty);
   }
 
-  Future<bool> presentInQueue(User user, server, Db db) async {
+  static Future<bool> presentInQueue(User user, server, Db db) async {
     final servers = db.collection('servers');
     return !(await servers
         .find(where.eq('serverName', server).eq('inQueue', user.username))
         .isEmpty);
   }
 
-  Future<bool> isChannelMember(User user, channel, Server server, Db db) async {
+  static Future<bool> isChannelMember(
+      User user, channel, Server server, Db db) async {
     var localServer = db.collection(server.serverName!);
 
     return !(await localServer
@@ -76,7 +76,7 @@ class Checks {
         .isEmpty);
   }
 
-  bool isMod(Server currServer, User user) {
+  static bool isMod(Server currServer, User user) {
     var role = currServer.roles?[user.username];
     if (role != 'mod' && role != 'creator') {
       return false;
@@ -84,14 +84,14 @@ class Checks {
     return true;
   }
 
-  Future<bool> isOwner(User user, server, Db db) async {
+  static Future<bool> isOwner(User user, server, Db db) async {
     final servers = db.collection('servers');
     return !(await servers
         .find(where.eq('serverName', server).eq('userId', user.id))
         .isEmpty);
   }
 
-  Future<List> permittedList(bool c, bool m, bool p) async {
+  static Future<List> permittedList(bool c, bool m, bool p) async {
     List permittedRoles = [];
     if (c) {
       permittedRoles.add(Permitted.creator);

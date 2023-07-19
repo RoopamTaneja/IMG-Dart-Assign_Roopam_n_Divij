@@ -30,8 +30,7 @@ void main(List<String> arguments) async {
     User userObj = User();
     await userObj.setUserData(currUser, db);
 
-    Checks errors = Checks();
-    bool check = await errors.serverExists(server, db);
+    bool check = await Checks.serverExists(server, db);
     if (!check) {
       ProcessError.ServerDoesNotExist(server);
     } else {
@@ -39,7 +38,7 @@ void main(List<String> arguments) async {
       await currServer.setServerData(server, db);
 
       if (channel != null && server != null) {
-        bool checkChannel = await errors.channelExists(channel, currServer, db);
+        bool checkChannel = await Checks.channelExists(channel, currServer, db);
         if (!checkChannel) {
           //channel does not exist
           ProcessError.ChannelDoesNotExist(channel);

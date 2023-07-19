@@ -33,8 +33,7 @@ void main(List<String> arguments) async {
     User userObj = User();
     await userObj.setUserData(currentSession['username'], db);
 
-    Checks errors = Checks();
-    bool checkOwner = await errors.isOwner(userObj, server, db);
+    bool checkOwner = await Checks.isOwner(userObj, server, db);
 
     if (!checkOwner) {
       //u are not owner

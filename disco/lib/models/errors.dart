@@ -1,5 +1,4 @@
 // ignore_for_file: non_constant_identifier_names
-
 class DuplicacyError {
   static final String _s = "DuplicacyError : ";
   static void UserExists(username) {
@@ -100,6 +99,10 @@ class ProcessError {
 
   static void ServerDoesNotExist(server) {
     print('$_s$server Does Not Exist');
+  }
+
+  static void CategoryDoesNotExist(category) {
+    print('$_s$category Does Not Exist');
   }
 
   static void UserNotInChannel(username) {

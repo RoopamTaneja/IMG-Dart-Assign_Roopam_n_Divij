@@ -53,8 +53,6 @@ void main(List<String> arguments) async {
     User senderObj = User();
     await senderObj.setUserData(sender, db);
 
-    Checks errors = Checks();
-
     if (receiver != null) {
       //for dm
 
@@ -62,7 +60,7 @@ void main(List<String> arguments) async {
     } else if (channel != null && server != null) {
       //for msg on channel
 
-      bool checkServer = await errors.serverExists(server, db);
+      bool checkServer = await Checks.serverExists(server, db);
       if (!checkServer) {
         ProcessError.ServerDoesNotExist(server);
         await db.close();
