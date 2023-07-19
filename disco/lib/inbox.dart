@@ -49,8 +49,6 @@ void main(List<String> arguments) async {
     User receiverObj = User();
     await receiverObj.setUserData(receiver, db);
 
-    Checks errors = Checks();
-
     if (sender != null) {
       await receiverObj.showDM(sender, limitF, db);
       await db.close();
@@ -74,7 +72,7 @@ void main(List<String> arguments) async {
     }
 
     if (server != null && channel != null) {
-      bool checkServer = await errors.serverExists(server, db);
+      bool checkServer = await Checks.serverExists(server, db);
 
       if (!checkServer) {
         ProcessError.ServerDoesNotExist(server);

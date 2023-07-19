@@ -43,10 +43,9 @@ void main(List<String> arguments) async {
     User userObj = User();
     await userObj.setUserData(activeUser, db);
 
-    Checks errors = Checks();
     if (channel == null && server != null) {
       //only creating a server with no channels
-      bool check = await errors.serverExists(server, db);
+      bool check = await Checks.serverExists(server, db);
 
       if (check) {
         DuplicacyError.ServerExists(server);
@@ -84,7 +83,7 @@ void main(List<String> arguments) async {
         //there is server, only channel needs to be added
 
         await currServer.setServerData(server, db);
-        bool checkRole = errors.isMod(currServer, userObj);
+        bool checkRole = Checks.isMod(currServer, userObj);
         if (!checkRole) {
           //user not mod or creator
           PermissionDeniedError.ModCreatorRight(server);
@@ -92,7 +91,7 @@ void main(List<String> arguments) async {
           //check if channel already exists
 
           var checkChannel =
-              await errors.channelExists(channel, currServer, db);
+              await Checks.channelExists(channel, currServer, db);
 
           if (checkChannel) {
             //channel already present

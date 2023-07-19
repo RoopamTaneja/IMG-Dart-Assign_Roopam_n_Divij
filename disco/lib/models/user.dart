@@ -35,7 +35,6 @@ class User {
   }
 
   Future register(String name, Db db) async {
-    Checks check = Checks();
     final userAuth = db.collection('userAuth');
     print(
         "Password must satify the following characters:\n-> At least one uppercase letter\n-> At least one lowercase letter\n-> At least one digit\n-> Minimum length of 8 characters ");
@@ -44,7 +43,7 @@ class User {
     var pass = stdin.readLineSync().toString();
     stdin.echoMode = true;
     print('');
-    if (!(await check.isValidPassword(pass))) {
+    if (!(await Checks.isValidPassword(pass))) {
       ProcessError.PasswordMismatch();
       return;
     }
@@ -139,8 +138,7 @@ class User {
       return;
     }
 
-    Checks errors = Checks();
-    bool checkReceiver = await errors.userExists(receiver, db);
+    bool checkReceiver = await Checks.userExists(receiver, db);
     if (!checkReceiver) {
       ProcessError.UserDoesNotExist(receiver);
       return;
@@ -191,8 +189,7 @@ class User {
     }
 
     //sender != "ALL" && sender != null
-    Checks errors = Checks();
-    bool checkSender = await errors.userExists(sender, db);
+    bool checkSender = await Checks.userExists(sender, db);
     if (!checkSender) {
       ProcessError.UserDoesNotExist(sender);
       return;

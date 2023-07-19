@@ -21,8 +21,7 @@ void main(List<String> arguments) async {
     String username = parsed['username'] as String;
 
     //registering the user in database
-    Checks errors = Checks();
-    bool userExists = await errors.userExists(username, db);
+    bool userExists = await Checks.userExists(username, db);
 
     //only registering if user does not exist
     if (!userExists) {

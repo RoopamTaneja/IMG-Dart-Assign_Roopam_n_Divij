@@ -18,20 +18,24 @@ class Channel {
 
   Channel();
 
-  Future createChannel(
-      User creator, channel, type, server, Db db, bool c, bool m, bool p,
-      [category]) async {
+  Future createChannel(User creator, channel, type, server, Db db,
+      [c, m, p, category]) async {
     var localServer = db.collection(server);
-    Checks check = Checks();
     if (category != null) {
-      if (await check.categoryExists(category, db)) {
+      if (await Checks.categoryExists(category, db)) {
         Category channelCategory =
-            Category.setCategoryData(category, server, db);
+            await Category.setCategoryData(category, server, db);
+        var categories = db.collection('categories');
+        categories.findOne(where.eq('categoryName', category));
+
+        permittedRoles = channelCategory.permitted;
+      } else {
+        ProcessError.CategoryDoesNotExist(category);
       }
-      ;
+    } else {
+      permittedRoles = await Checks.permittedList(c, m, p);
     }
     channelCreator = creator.username;
-    permittedRoles = await check.permittedList(c, m, p);
     permittedUsers.add(creator.username);
     final document =
         _createChannelDoc(channel, creator.username, creator.id, type);
@@ -85,18 +89,17 @@ class Channel {
     if (activeUser != channelCreator) {
       ProcessError.ChannelRightsError();
     }
-    Checks error = Checks();
     Server server = Server();
     server.setServerData(serverName ?? "", db);
 
     for (String i in userList) {
       if (permittedUsers.contains(i)) {
         continue;
-      } else if (await error.userExists(i, db)) {
+      } else if (await Checks.userExists(i, db)) {
         User user = User();
         await user.setUserData(i, db);
 
-        if (await error.isServerMember(user, server, db)) {
+        if (await Checks.isServerMember(user, server, db)) {
           var localServer = db.collection(serverName!);
           await localServer.update(where.eq('channelName', channelName),
               modify.push('permittedMembers', i));

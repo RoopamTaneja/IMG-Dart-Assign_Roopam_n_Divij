@@ -33,8 +33,7 @@ void main(List<String> arguments) async {
     User userObj = User();
     await userObj.setUserData(currentUser, db);
 
-    Checks errors = Checks();
-    bool check = await errors.serverExists(server, db);
+    bool check = await Checks.serverExists(server, db);
 
     if (!check) {
       ProcessError.ServerDoesNotExist(server);
@@ -43,7 +42,7 @@ void main(List<String> arguments) async {
       Server currServer = Server();
       await currServer.setServerData(server, db);
 
-      bool checkRole = errors.isMod(currServer, userObj);
+      bool checkRole = Checks.isMod(currServer, userObj);
       if (!checkRole) {
         //u are not mod or creator
         PermissionDeniedError.ModCreatorRight(server);

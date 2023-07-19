@@ -78,13 +78,12 @@ class Server {
     var localServer = db.collection(serverName!);
 
     var sender = senderObj.username;
-    Checks errors = Checks();
-    bool checkUser = await errors.isServerMember(senderObj, this, db);
+    bool checkUser = await Checks.isServerMember(senderObj, this, db);
     if (!checkUser) {
       ProcessError.UserNotInServer(sender);
       return;
     }
-    bool checkChannel = await errors.channelExists(channel, this, db);
+    bool checkChannel = await Checks.channelExists(channel, this, db);
     if (!checkChannel) {
       ProcessError.ChannelDoesNotExist(channel);
       return;
@@ -93,7 +92,7 @@ class Server {
         await localServer.findOne(where.eq('channelName', channel)) ?? {};
     List permittedRoles = localChannel['permittedRoles'];
     bool checkInChannel =
-        await errors.isChannelMember(senderObj, channel, this, db);
+        await Checks.isChannelMember(senderObj, channel, this, db);
     if (!checkInChannel) {
       ProcessError.UserNotInChannel(sender);
       return;
@@ -123,21 +122,20 @@ class Server {
     var serverDb = db.collection(serverName!);
     var receiver = receiverObj.username;
 
-    Checks errors = Checks();
-    bool checkUser = await errors.isServerMember(receiverObj, this, db);
+    bool checkUser = await Checks.isServerMember(receiverObj, this, db);
     if (!checkUser) {
       ProcessError.UserNotInServer(receiver);
       return;
     }
 
-    bool checkChannel = await errors.channelExists(channel, this, db);
+    bool checkChannel = await Checks.channelExists(channel, this, db);
     if (!checkChannel) {
       ProcessError.ChannelDoesNotExist(channel);
       return;
     }
 
     bool checkInChannel =
-        await errors.isChannelMember(receiverObj, channel, this, db);
+        await Checks.isChannelMember(receiverObj, channel, this, db);
     if (!checkInChannel) {
       ProcessError.UserNotInChannel(receiver);
       return;

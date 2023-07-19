@@ -1,8 +1,8 @@
-import 'package:disco/models/errors.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/user.dart';
 import 'package:disco/models/server.dart';
 import 'package:disco/models/checks.dart';
+import 'package:disco/models/errors.dart';
 
 class Moderator extends User {
   Server? myServer;
@@ -31,8 +31,7 @@ class Moderator extends User {
     final currServer = myServer;
 
     //server exists
-    Checks errors = Checks();
-    bool checkUser = await errors.userExists(username, db);
+    bool checkUser = await Checks.userExists(username, db);
 
     if (!checkUser) {
       //user does not exist
@@ -68,8 +67,7 @@ class Moderator extends User {
     var serverCurr = db.collection(currServer!.serverName!);
 
     //server exists
-    Checks errors = Checks();
-    bool checkUser = await errors.userExists(username, db);
+    bool checkUser = await Checks.userExists(username, db);
 
     if (!checkUser) {
       //user does not exist
@@ -80,13 +78,13 @@ class Moderator extends User {
       await newExit.setUserData(username, db);
 
       if (channel != null) {
-        var checkChannel = await errors.channelExists(channel, currServer, db);
+        var checkChannel = await Checks.channelExists(channel, currServer, db);
         if (!checkChannel) {
           ProcessError.ChannelDoesNotExist(channel);
           return;
         }
         bool isMember =
-            await errors.isChannelMember(newExit, channel, currServer, db);
+            await Checks.isChannelMember(newExit, channel, currServer, db);
 
         if (!isMember) {
           ProcessError.UserNotInChannel(username);
@@ -99,7 +97,7 @@ class Moderator extends User {
         print(
             'Successfully Removed $username from Channel $channel of Server ${currServer.serverName}');
       } else {
-        bool isMember = await errors.isServerMember(newExit, currServer, db);
+        bool isMember = await Checks.isServerMember(newExit, currServer, db);
 
         if (!isMember) {
           ProcessError.UserNotInServer(username);
