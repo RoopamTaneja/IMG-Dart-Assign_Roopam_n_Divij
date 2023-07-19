@@ -87,7 +87,7 @@ class ProcessError {
   }
 
   static void PasswordMismatchCriteraia() {
-    print('${_s}Password Do Not Match Critera');
+    print('${_s}Password Does Not Match Criteria');
   }
 
   static void UserDoesNotExist(username) {

@@ -1,5 +1,4 @@
 import 'package:args/args.dart';
-import 'package:disco/models/mod.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/checks.dart';
 import 'package:disco/models/user.dart';
@@ -35,9 +34,9 @@ void main(List<String> arguments) async {
 
     final channel = parsed['channel'];
     final server = parsed['server'];
-    final Creator = parsed['creator'] as bool;
-    final Moderator = parsed['moderator'] as bool;
-    final Peasant = parsed['peasant'] as bool;
+    final creator = parsed['creator'] as bool;
+    final moderator = parsed['moderator'] as bool;
+    final peasant = parsed['peasant'] as bool;
     String type = parsed['type'] ?? "text";
 
     String activeUser = currentSession['username'];
@@ -73,8 +72,8 @@ void main(List<String> arguments) async {
 
         final res1 = await currServer.createServer(userObj, server, db);
 
-        final res2 = await newChannel.createChannel(userObj, channel, type,
-            server, db, Creator, Moderator, Peasant, activeUser);
+        final res2 = await newChannel.createChannel(
+            userObj, channel, type, server, db, creator, moderator, peasant);
 
         if (res1.isAcknowledged && res2.isAcknowledged) {
           print('Successfully Created Channel $channel In Server $server');
@@ -102,7 +101,7 @@ void main(List<String> arguments) async {
             //channel not present can be added
 
             final result = await newChannel.createChannel(userObj, channel,
-                type, server, db, Creator, Moderator, Peasant, activeUser);
+                type, server, db, creator, moderator, peasant);
 
             if (result.isAcknowledged) {
               print('Successfully Created Channel $channel');

@@ -2,6 +2,7 @@ import 'package:disco/models/errors.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/server.dart';
 import 'package:disco/models/user.dart';
+import 'package:disco/models/category.dart';
 import 'package:disco/models/checks.dart';
 
 class Channel {
@@ -11,16 +12,25 @@ class Channel {
   List<dynamic>? members;
   String? type;
   List<dynamic>? messages;
+  Category? channelCategory;
   List<dynamic> permittedRoles = [];
   List<dynamic> permittedUsers = [];
 
   Channel();
 
-  Future createChannel(User creator, channel, type, server, Db db, bool c,
-      bool m, bool p, activeUser) async {
+  Future createChannel(
+      User creator, channel, type, server, Db db, bool c, bool m, bool p,
+      [category]) async {
     var localServer = db.collection(server);
-    Checks check = new Checks();
-    channelCreator = activeUser;
+    Checks check = Checks();
+    if (category != null) {
+      if (await check.categoryExists(category, db)) {
+        Category channelCategory =
+            Category.setCategoryData(category, server, db);
+      }
+      ;
+    }
+    channelCreator = creator.username;
     permittedRoles = await check.permittedList(c, m, p);
     permittedUsers.add(creator.username);
     final document =
@@ -75,7 +85,7 @@ class Channel {
     if (activeUser != channelCreator) {
       ProcessError.ChannelRightsError();
     }
-    Checks error = new Checks();
+    Checks error = Checks();
     Server server = Server();
     server.setServerData(serverName ?? "", db);
 
