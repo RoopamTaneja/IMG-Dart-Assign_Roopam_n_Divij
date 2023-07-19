@@ -10,6 +10,7 @@ import 'package:disco/messages.dart' as messages;
 import 'package:disco/inbox.dart' as inbox;
 import 'package:disco/leave.dart' as leave;
 import 'package:disco/bye.dart' as bye;
+import 'package:disco/permit.dart' as permit;
 
 void main(List<String> arguments) {
   if (arguments.isNotEmpty) {
@@ -54,6 +55,9 @@ void main(List<String> arguments) {
         break;
       case "bye":
         bye.main(arguments);
+        break;
+      case "permit":
+        permit.main(arguments);
         break;
       default:
         print("SyntaxError : No such command exists");

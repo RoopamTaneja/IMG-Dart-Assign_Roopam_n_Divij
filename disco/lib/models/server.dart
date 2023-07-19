@@ -103,7 +103,11 @@ class Server {
       ProcessError.ChannelRightsError();
       return;
     }
-
+    List permittedUsers = localChannel['permittedMembers'];
+    if (!permittedUsers.contains(sender)) {
+      ProcessError.ChannelRightsError();
+      return;
+    }
     final document = {
       'sender': sender,
       'time': DateTime.now().toString(),
