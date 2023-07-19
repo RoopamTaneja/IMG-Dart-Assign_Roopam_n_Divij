@@ -2,6 +2,9 @@ import 'package:disco/models/errors.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/server.dart';
 import 'package:disco/models/user.dart';
+import 'package:disco/models/category.dart';
+
+enum permitted { creator, moderator, peasant }
 
 class Channel {
   String? channelName;
@@ -9,28 +12,35 @@ class Channel {
   List<dynamic>? members;
   String? type;
   List<dynamic>? messages;
+  Category? channelCategory;
   List<dynamic> permittedRoles = [];
   List<dynamic>? permittedMembers;
 
   Channel();
 
-  Future createChannel(User creator, channel, type, server, Db db, bool c,
-      bool m, bool p) async {
+  Future createChannel(
+      User creator, channel, type, server, Db db, bool c, bool m, bool p,
+      [category]) async {
     var localServer = db.collection(server);
-    List<String> permitted = [];
-    if (c) {
-      permittedRoles.add('creator');
-    }
-    if (m) {
-      permittedRoles.add('moderator');
-    }
-    if (p) {
-      permittedRoles.add('peasant');
-    }
-    if (!c && !m && !p) {
-      permittedRoles.add('creator');
-      permittedRoles.add('moderator');
-      permittedRoles.add('peasant');
+
+    // if (c) {
+    //   permittedRoles.add(permitted.creator);
+    // }
+    // if (m) {
+    //   permittedRoles.add(permitted.moderator);
+    // }
+    // if (p) {
+    //   permittedRoles.add(permitted.peasant);
+    // }
+    // if (!c && !m && !p) {
+    //   permittedRoles.add(permitted.creator);
+    //   permittedRoles.add(permitted.moderator);
+    //   permittedRoles.add(permitted.peasant);
+    // }
+
+    if (category != null) {
+      Category currentCategory =
+          await Category.setCategoryData(category, server, db);
     }
 
     final document =
