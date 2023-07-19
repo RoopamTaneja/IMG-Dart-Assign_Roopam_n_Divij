@@ -26,8 +26,9 @@ class Channel {
         Category channelCategory =
             await Category.setCategoryData(category, server, db);
         var categories = db.collection('categories');
-        categories.findOne(where.eq('categoryName', category));
 
+        await categories.update(where.eq('categoryName', category),
+            modify.push('channelList', channel));
         permittedRoles = channelCategory.permitted;
       } else {
         ProcessError.CategoryDoesNotExist(category);

@@ -94,18 +94,18 @@ class Checks {
   static Future<List> permittedList(bool c, bool m, bool p) async {
     List permittedRoles = [];
     if (c) {
-      permittedRoles.add(Permitted.creator);
+      permittedRoles.add(Permitted.creator.toString());
     }
     if (m) {
-      permittedRoles.add(Permitted.moderator);
+      permittedRoles.add(Permitted.moderator.toString());
     }
     if (p) {
-      permittedRoles.add(Permitted.peasant);
+      permittedRoles.add(Permitted.peasant.toString());
     }
     if (!c && !m && !p) {
-      permittedRoles.add(Permitted.creator);
-      permittedRoles.add(Permitted.moderator);
-      permittedRoles.add(Permitted.peasant);
+      permittedRoles.add(Permitted.creator.toString());
+      permittedRoles.add(Permitted.moderator.toString());
+      permittedRoles.add(Permitted.peasant.toString());
     }
     return permittedRoles;
   }

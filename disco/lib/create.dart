@@ -23,6 +23,7 @@ void main(List<String> arguments) async {
     parser.addOption("channel",
         abbr: "c", help: "CREATE CHANNEL WITHIN SERVER");
     parser.addOption("type", abbr: "t", help: "ADD CHANNEL TYPE");
+    parser.addOption("category", abbr: "g", help: "ADD CATEGORY WITHIN SERVER");
     parser.addFlag("creator",
         abbr: "C", help: "ALLOW CREATOR TO ACCESS CHANNELS");
     parser.addFlag("moderator",
@@ -37,6 +38,7 @@ void main(List<String> arguments) async {
     final creator = parsed['creator'] as bool;
     final moderator = parsed['moderator'] as bool;
     final peasant = parsed['peasant'] as bool;
+    final category = parsed['category'];
     String type = parsed['type'] ?? "text";
 
     String activeUser = currentSession['username'];
@@ -71,8 +73,8 @@ void main(List<String> arguments) async {
 
         final res1 = await currServer.createServer(userObj, server, db);
 
-        final res2 = await newChannel.createChannel(
-            userObj, channel, type, server, db, creator, moderator, peasant);
+        final res2 = await newChannel.createChannel(userObj, channel, type,
+            server, db, creator, moderator, peasant, category);
 
         if (res1.isAcknowledged && res2.isAcknowledged) {
           print('Successfully Created Channel $channel In Server $server');
