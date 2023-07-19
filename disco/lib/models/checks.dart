@@ -2,6 +2,8 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/user.dart';
 import 'package:disco/models/server.dart';
 
+enum Permitted { creator, moderator, peasant }
+
 class Checks {
   Checks();
   Future<bool> isValidPassword(String password) async {
@@ -87,5 +89,24 @@ class Checks {
     return !(await servers
         .find(where.eq('serverName', server).eq('userId', user.id))
         .isEmpty);
+  }
+
+  Future<List> permittedList(bool c, bool m, bool p) async {
+    List permittedRoles = [];
+    if (c) {
+      permittedRoles.add(Permitted.creator);
+    }
+    if (m) {
+      permittedRoles.add(Permitted.moderator);
+    }
+    if (p) {
+      permittedRoles.add(Permitted.peasant);
+    }
+    if (!c && !m && !p) {
+      permittedRoles.add(Permitted.creator);
+      permittedRoles.add(Permitted.moderator);
+      permittedRoles.add(Permitted.peasant);
+    }
+    return permittedRoles;
   }
 }

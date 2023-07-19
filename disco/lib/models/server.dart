@@ -103,7 +103,7 @@ class Server {
       ProcessError.ChannelRightsError();
       return;
     }
-    List permittedUsers = localChannel['permittedMembers'];
+    List permittedUsers = localChannel['permittedUsers'];
     if (!permittedUsers.contains(sender)) {
       ProcessError.ChannelRightsError();
       return;

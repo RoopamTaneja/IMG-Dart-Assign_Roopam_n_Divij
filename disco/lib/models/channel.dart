@@ -5,8 +5,6 @@ import 'package:disco/models/user.dart';
 import 'package:disco/models/category.dart';
 import 'package:disco/models/checks.dart';
 
-enum permitted { creator, moderator, peasant }
-
 class Channel {
   String? channelName;
   String? serverName;
@@ -24,33 +22,15 @@ class Channel {
       User creator, channel, type, server, Db db, bool c, bool m, bool p,
       [category]) async {
     var localServer = db.collection(server);
-
-    // if (c) {
-    //   permittedRoles.add(permitted.creator);
-    // }
-    // if (m) {
-    //   permittedRoles.add(permitted.moderator);
-    // }
-    // if (p) {
-    //   permittedRoles.add(permitted.peasant);
-    // }
-    // if (!c && !m && !p) {
-    //   permittedRoles.add(permitted.creator);
-    //   permittedRoles.add(permitted.moderator);
-    //   permittedRoles.add(permitted.peasant);
-    // }
-
+    Checks check = Checks();
     if (category != null) {
-      Category currentCategory =
-          await Category.setCategoryData(category, server, db);
+      if (await check.categoryExists(category, db)) {
+        Category channelCategory =
+            Category.setCategoryData(category, server, db);
+      }
+      ;
     }
-  }
-
-  Future createChannel(User creator, channel, type, server, Db db, bool c,
-      bool m, bool p, activeUser) async {
-    var localServer = db.collection(server);
-    Checks check = new Checks();
-    channelCreator = activeUser;
+    channelCreator = creator.username;
     permittedRoles = await check.permittedList(c, m, p);
     permittedUsers.add(creator.username);
     final document =
@@ -105,7 +85,7 @@ class Channel {
     if (activeUser != channelCreator) {
       ProcessError.ChannelRightsError();
     }
-    Checks error = new Checks();
+    Checks error = Checks();
     Server server = Server();
     server.setServerData(serverName ?? "", db);
 

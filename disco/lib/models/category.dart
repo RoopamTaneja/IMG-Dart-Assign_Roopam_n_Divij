@@ -12,16 +12,16 @@ class Category {
     return await categories.findOne(where.eq('categoryName', category));
   }
 
-  static Future<Category> setCategoryData(
-      category, Server server, Db db) async {
-    var categories = db.collection('categories');
+  static Future<Category> setCategoryData(category, server, Db db) async {
+    var categories = db.collection('$server:categories');
     Category newCategory = Category();
     final categoryDoc =
         await categories.findOne(where.eq('categoryName', category));
-    final categoryServer = categoryDoc?['ServerName'];
+
     Server sample = Server();
-    await sample.setServerData(categoryServer, db);
-    newCategory.myServer = sample;
+    await sample.setServerData(server, db);
+    newCategory.myServer = await sample.findServer(server, db);
+    ;
     newCategory.channels = categoryDoc?['channels'];
     newCategory.permitted = categoryDoc?['permitted'];
     return newCategory;
