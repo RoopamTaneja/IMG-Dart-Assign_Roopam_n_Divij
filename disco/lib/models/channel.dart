@@ -3,18 +3,20 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/server.dart';
 import 'package:disco/models/user.dart';
 import 'package:disco/models/category.dart';
+import 'package:disco/models/checks.dart';
 
 enum permitted { creator, moderator, peasant }
 
 class Channel {
   String? channelName;
   String? serverName;
+  String? channelCreator;
   List<dynamic>? members;
   String? type;
   List<dynamic>? messages;
   Category? channelCategory;
   List<dynamic> permittedRoles = [];
-  List<dynamic>? permittedMembers;
+  List<dynamic> permittedUsers = [];
 
   Channel();
 
@@ -42,7 +44,15 @@ class Channel {
       Category currentCategory =
           await Category.setCategoryData(category, server, db);
     }
+  }
 
+  Future createChannel(User creator, channel, type, server, Db db, bool c,
+      bool m, bool p, activeUser) async {
+    var localServer = db.collection(server);
+    Checks check = new Checks();
+    channelCreator = activeUser;
+    permittedRoles = await check.permittedList(c, m, p);
+    permittedUsers.add(creator.username);
     final document =
         _createChannelDoc(channel, creator.username, creator.id, type);
 
@@ -91,16 +101,45 @@ class Channel {
     print('Successfully Exited from $channelName');
   }
 
+  Future addPermittedMember(userList, db, activeUser) async {
+    if (activeUser != channelCreator) {
+      ProcessError.ChannelRightsError();
+    }
+    Checks error = new Checks();
+    Server server = Server();
+    server.setServerData(serverName ?? "", db);
+
+    for (String i in userList) {
+      if (permittedUsers.contains(i)) {
+        continue;
+      } else if (await error.userExists(i, db)) {
+        User user = User();
+        await user.setUserData(i, db);
+
+        if (await error.isServerMember(user, server, db)) {
+          var localServer = db.collection(serverName!);
+          await localServer.update(where.eq('channelName', channelName),
+              modify.push('permittedMembers', i));
+          permittedUsers.add(i);
+        } else {
+          continue;
+        }
+      }
+    }
+  }
+
   //private method
   Map<String, dynamic> _createChannelDoc(
       channel, activeUser, activeUserId, type) {
     final document = {
       'channelName': channel,
+      'creator': activeUser,
       'members': [
         {activeUser: activeUserId}
       ],
       'type': type,
       'permittedRoles': permittedRoles,
+      'permittedUsers': permittedUsers,
       'messages': []
     };
     return document;

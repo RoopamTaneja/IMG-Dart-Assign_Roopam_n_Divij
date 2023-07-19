@@ -42,6 +42,12 @@ class Checks {
     return !(await localServer.find(where.eq('channelName', channel)).isEmpty);
   }
 
+  Future<bool> categoryExists(category, Db db) async {
+    var categories = db.collection('categories');
+
+    return !(await categories.find(where.eq('categoryName', category)).isEmpty);
+  }
+
   Future<bool> isServerMember(User user, Server server, Db db) async {
     final servers = db.collection('servers');
     return !(await servers
