@@ -10,7 +10,6 @@ import 'package:disco/messages.dart' as messages;
 import 'package:disco/inbox.dart' as inbox;
 import 'package:disco/leave.dart' as leave;
 import 'package:disco/bye.dart' as bye;
-import 'package:disco/permit.dart' as permit;
 import 'package:disco/addCategory.dart' as category;
 import 'package:disco/move.dart' as move;
 
@@ -58,9 +57,6 @@ void main(List<String> arguments) {
         break;
       case "bye":
         bye.main(arguments);
-        break;
-      case "permit":
-        permit.main(arguments);
         break;
       case "addCategory":
         category.main(arguments);

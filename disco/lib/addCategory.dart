@@ -15,9 +15,8 @@ void main(List<String> arguments) async {
 
   final userSessions = db.collection('userSession');
   final currentSession = await userSessions.findOne();
-  var activeUser = currentSession?['username'];
-  Server ser = new Server();
-  User us = new User();
+  Server currServer = Server();
+  User userObj = User();
   if (currentSession == null) {
     //if no user logged in then no point in moving ahead
     LoginError.NotLoggedIn();
@@ -44,10 +43,10 @@ void main(List<String> arguments) async {
     List userList = users.split('+');
     var activeUser = currentSession['username'];
 
-    await ser.setServerData(server, db);
-    await us.setUserData(activeUser, db);
+    await currServer.setServerData(server, db);
+    await userObj.setUserData(activeUser, db);
 
-    if (!Checks.isMod(ser, us)) {
+    if (!Checks.isMod(currServer, userObj)) {
       ProcessError.ChannelRightsError();
     } else if (await Checks.categoryExists(server, category, db)) {
       DuplicacyError.CategoryExists(category, server);

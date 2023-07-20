@@ -8,23 +8,28 @@
 External Dart packages used : mongo_dart, args, crypto
 
 ## Prerequisites
+
 - Dart SDK 3.0.5
 - MongoDB 6.0.7
 
 ## Installation
 
 1. Clone the repository :
+
+```bash
+git clone git@github.com:RoopamTaneja/IMG-Dart-Assign_Roopam_n_Divij.git
 ```
-$ git clone git@github.com:RoopamTaneja/IMG-Dart-Assign_Roopam_n_Divij.git
-```
-2.  Enter project directory and run the project :
-```
-$ cd disco
-$ dart run
+
+2. Enter project directory and run the project :
+
+```bash
+cd disco
+dart run
 ```
 
 *The application is ready to use. Try various commands prefixed by : `dart .\bin\disco.dart` and enjoy.*<br>
-*For example : `dart .\bin\disco.dart register -u <username>`*
+*For example : `dart .\bin\disco.dart register -u <username>`*<br>
+***Linux users may just prefix ./disco with their commands.***
 
 ## Commands
 
@@ -43,13 +48,20 @@ $ dart run
 
 - `create [OPTION(s), FLAG(s)]`<br>
 **Usage**: Create server/ channel within server<br>
+*Options*:
 &emsp;-s, --server : specify name of server to create new server <br>
+&emsp;e.g. `create -s server1`<br>
 &emsp;-c, --channel : specify name of channel to create new channel within new/existing server (OPTIONAL). <br>
 &emsp;New channel in existing server can be added only by a moderator or creater.<br>
 &emsp;-t, --type : specify type of channel (OPTIONAL)<br>
-_Flags_:
-&emsp;-C, --
-&emsp;e.g. `create -s server1 -c ch1 -t text`<br><br>
+*Flags*:
+Add one or more flags to give permission to that role for sending messages in the channel being created.
+&emsp;-C, --creator :
+&emsp;-M, --moderator :
+&emsp;-P, --peasant:
+&emsp;e.g. `create -s server1 -c ch1 -t voice -C -M`<br>
+&emsp;e.g. `create -s server1 -c ch1 -t text`<br>
+&emsp;(Adding no flags implies all kinds of users can send messages in the channel.)<br><br>
 
 - `join [OPTION(s)]`<br>
 **Usage**: Join server/ channel within server<br>
@@ -72,6 +84,12 @@ _Flags_:
 &emsp;Can be used even if user is not server member<br>
 &emsp;e.g. `showChannels -s server1`<br><br>
 
+- `showCategories [OPTION]`<br>
+**Usage**: Show list of all categories of a server<br>
+&emsp;-s, --server : specify name of server<br>
+&emsp;Can be used even if user is not server member<br>
+&emsp;e.g. `showCategories -s server1`<br><br>
+
 - `showMods [OPTION]`<br>
 **Usage**: Show list of all moderators of a server<br>
 &emsp;-s, --server : specify name of server<br>
@@ -79,6 +97,7 @@ _Flags_:
 &emsp;e.g. `showMods -s server1`<br><br>
 
 - `message [OPTIONS]`<br>
+
 1. **Usage**: Send personal message to another user (even if not on same server)<br>
 &emsp;-p, --personal : specify name of receiver<br>
 &emsp;-w, --write : specify your message(enclosed in "")<br>
@@ -91,6 +110,7 @@ _Flags_:
 &emsp;e.g. `message -s server1 -c ch1 -w "Hello, World!"`<br><br>
 
 - `inbox [OPTION(s)]`<br>
+
 1. **Usage**: See personal messages received from all users or a particular user<br>
 &emsp;-u, --user : specify name of user<br>
 &emsp;Enter `-u ALL` to see messages from all users.<br>
@@ -116,7 +136,7 @@ _Flags_:
 - `bye`<br>
 **Usage**: Delete account<br><br>
 
-**_Commands only accessible to moderators and creator_**
+***Commands only accessible to moderators and creator***
 
 - `admit [OPTIONS]`<br>
 **Usage**: Admit a user in a server<br>
@@ -130,15 +150,20 @@ _Flags_:
 &emsp;-s, --server : specify name of server<br>
 &emsp;e.g. `remove -u user1 -s server1`<br><br>
 
+- `addCategory [OPTIONS, FLAG(s)]`<br>
+**Usage**: Add a new category in a server<br>
+&emsp;-s, --server : specify server name<br>
+&emsp;-g, --category : specify category name<br>
+
 - `showEntrants [OPTION]`<br>
 **Usage**: Show list of users waiting for approval to join<br>
 &emsp;-s, --server : specify name of server<br>
 &emsp;e.g. `showEntrants -s server1`<br><br>
 
-**_Commands only accessible to creator_**<br><br>
-_Such commands are prefixed by sudo (signifying creator)._<br>
-_Other commands are added under -o, --owner option._<br>
-_Like : sudo -o <command> [OPTIONS]_<br>
+***Commands only accessible to creator***<br><br>
+*Such commands are prefixed by sudo (signifying creator).*<br>
+*Other commands are added under -o, --owner option.*<br>
+*Like : sudo -o <command> [OPTIONS]*<br>
 
 - `addMod [OPTIONS]`<br>
 **Usage**: Promote a member of a server to moderator<br>
@@ -151,3 +176,10 @@ _Like : sudo -o <command> [OPTIONS]_<br>
 &emsp;-u, --username : specify username of moderator<br>
 &emsp;-s, --server : specify name of server<br>
 &emsp;e.g. `sudo -o removeMod -u user1 -s server1`<br><br>
+
+- `permit [OPTIONS]`<br>
+**Usage**: Give messaging rights of a particular channel to specific users<br>
+&emsp;-s, --server : specify name of server<br>
+&emsp;-c, --channel : specify name of channel<br>
+&emsp;-u, --users : specify list of server members to be permitted; separate ,ultipke names by '+'
+&emsp;e.g. `sudo -o permit -s server1 -c ch1 -u user1+user2+user3`<br><br>

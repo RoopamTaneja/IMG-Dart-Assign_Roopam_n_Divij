@@ -113,25 +113,22 @@ class Server {
       ProcessError.UserNotInChannel(sender);
       return;
     }
-
-    if (!permittedRoles.contains(roles?[sender])) {
-      ProcessError.ChannelRightsError();
-      return;
-    }
     List permittedUsers = localChannel['permittedUsers'];
-    if (!permittedUsers.contains(sender)) {
+    if (!permittedRoles.contains(roles?[sender]) &&
+        !permittedUsers.contains(sender)) {
       ProcessError.ChannelRightsError();
       return;
-    }
-    final document = {
-      'sender': sender,
-      'time': DateTime.now().toString(),
-      'message': msg
-    };
-    await localServer.update(
-        where.eq('channelName', channel), modify.push('messages', document));
+    } else {
+      final document = {
+        'sender': sender,
+        'time': DateTime.now().toString(),
+        'message': msg
+      };
+      await localServer.update(
+          where.eq('channelName', channel), modify.push('messages', document));
 
-    print('Message Sent Successfully');
+      print('Message Sent Successfully');
+    }
   }
 
   Future showChannelMsg(channel, limitF, User receiverObj, Db db) async {
