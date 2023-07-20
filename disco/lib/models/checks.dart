@@ -2,8 +2,6 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/user.dart';
 import 'package:disco/models/server.dart';
 
-enum Permitted { creator, moderator, peasant }
-
 class Checks {
   static Future<bool> isValidPassword(String password) async {
     // Define the pattern using a regular expression
@@ -43,8 +41,8 @@ class Checks {
     return !(await localServer.find(where.eq('channelName', channel)).isEmpty);
   }
 
-  static Future<bool> categoryExists(category, Db db) async {
-    var categories = db.collection('categories');
+  static Future<bool> categoryExists(server, category, Db db) async {
+    var categories = db.collection('$server.categories');
 
     return !(await categories.find(where.eq('categoryName', category)).isEmpty);
   }
@@ -94,18 +92,18 @@ class Checks {
   static Future<List> permittedList(bool c, bool m, bool p) async {
     List permittedRoles = [];
     if (c) {
-      permittedRoles.add(Permitted.creator.toString());
+      permittedRoles.add("creator");
     }
     if (m) {
-      permittedRoles.add(Permitted.moderator.toString());
+      permittedRoles.add("moderator");
     }
     if (p) {
-      permittedRoles.add(Permitted.peasant.toString());
+      permittedRoles.add("peasant");
     }
     if (!c && !m && !p) {
-      permittedRoles.add(Permitted.creator.toString());
-      permittedRoles.add(Permitted.moderator.toString());
-      permittedRoles.add(Permitted.peasant.toString());
+      permittedRoles.add("creator");
+      permittedRoles.add("moderator");
+      permittedRoles.add("peasant");
     }
     return permittedRoles;
   }
