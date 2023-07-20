@@ -50,6 +50,7 @@ void main(List<String> arguments) async {
         Channel ch = Channel();
         await ch.setChannelData(server, channel, db);
         await ch.moveToCategory(category, channel, server, db);
+        print('Successfully moved $channel to $category');
       }
     }
   }

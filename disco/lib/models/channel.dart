@@ -125,7 +125,10 @@ class Channel {
     await localServer.update(where.eq('channelName', channelName),
         modify.set('permittedRoles', categoryCurr?["permittedRoles"]));
     var categories = db.collection('$server.categories');
-    return await categories.update(where.eq('categoryName', category),
+
+    await categories.update(where, modify.pull('channelList', channel),
+        multiUpdate: true);
+    await categories.update(where.eq('categoryName', category),
         modify.push('channelList', channel));
   }
 
