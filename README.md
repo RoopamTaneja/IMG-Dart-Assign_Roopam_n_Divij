@@ -41,12 +41,14 @@ $ dart run
 - `logout`<br>
 **Usage**: Logout logged in user<br><br>
 
-- `create [OPTION(s)]`<br>
+- `create [OPTION(s), FLAG(s)]`<br>
 **Usage**: Create server/ channel within server<br>
 &emsp;-s, --server : specify name of server to create new server <br>
 &emsp;-c, --channel : specify name of channel to create new channel within new/existing server (OPTIONAL). <br>
 &emsp;New channel in existing server can be added only by a moderator or creater.<br>
 &emsp;-t, --type : specify type of channel (OPTIONAL)<br>
+_Flags_:
+&emsp;-C, --
 &emsp;e.g. `create -s server1 -c ch1 -t text`<br><br>
 
 - `join [OPTION(s)]`<br>

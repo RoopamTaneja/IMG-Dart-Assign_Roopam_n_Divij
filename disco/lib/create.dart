@@ -97,7 +97,7 @@ void main(List<String> arguments) async {
 
           if (checkChannel) {
             //channel already present
-            DuplicacyError.ChannelExists(channel);
+            DuplicacyError.ChannelExists(channel, server);
           } else {
             //channel not present can be added
 

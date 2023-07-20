@@ -1,5 +1,4 @@
 import 'package:args/args.dart';
-import 'package:disco/models/category.dart';
 import 'package:disco/models/channel.dart';
 import 'package:disco/models/checks.dart';
 import 'package:disco/models/server.dart';

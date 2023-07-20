@@ -35,6 +35,7 @@ void main(List<String> arguments) {
       case "showUser":
       case "showMods":
       case "showChannels":
+      case "showCategories":
       case "showServers":
         show.main(arguments);
         break;

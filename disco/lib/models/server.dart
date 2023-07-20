@@ -74,6 +74,21 @@ class Server {
     }
   }
 
+  Future<void> showCategories(Db db) async {
+    await Future.delayed(Duration(seconds: 2));
+    DbCollection categories = db.collection('$serverName.categories');
+    List categoryNames =
+        await categories.find().map((doc) => doc['categoryName']).toList();
+    if (categoryNames.isEmpty) {
+      print("No Categories Yet in $serverName.");
+    } else {
+      print("List of Categories in $serverName : ");
+      for (String i in categoryNames) {
+        print(i);
+      }
+    }
+  }
+
   Future sendMsgInChannel(msg, channel, User senderObj, Db db) async {
     var localServer = db.collection(serverName!);
 
