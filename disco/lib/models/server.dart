@@ -75,7 +75,7 @@ class Server {
   }
 
   Future<void> showCategories(Db db) async {
-    await Future.delayed(Duration(seconds: 2));
+    // await Future.delayed(Duration(seconds: 2));
     DbCollection categories = db.collection('$serverName.categories');
     List categoryNames =
         await categories.find().map((doc) => doc['categoryName']).toList();
