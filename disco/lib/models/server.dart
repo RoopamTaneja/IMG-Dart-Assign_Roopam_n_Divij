@@ -76,7 +76,7 @@ class Server {
   }
 
   Future<void> showCategories(Db db) async {
-    await Future.delayed(Duration(seconds: 2));
+    // await Future.delayed(Duration(seconds: 2));
     DbCollection categories = db.collection('$serverName.categories');
     List categoryNames =
         await categories.find().map((doc) => doc['categoryName']).toList();
@@ -113,25 +113,22 @@ class Server {
       ProcessError.UserNotInChannel(sender);
       return;
     }
-
-    if (!permittedRoles.contains(roles?[sender])) {
-      ProcessError.ChannelRightsError();
-      return;
-    }
     List permittedUsers = localChannel['permittedUsers'];
-    if (!permittedUsers.contains(sender)) {
+    if (!permittedRoles.contains(roles?[sender]) &&
+        !permittedUsers.contains(sender)) {
       ProcessError.ChannelRightsError();
       return;
-    }
-    final document = {
-      'sender': sender,
-      'time': DateTime.now().toString(),
-      'message': msg
-    };
-    await localServer.update(
-        where.eq('channelName', channel), modify.push('messages', document));
+    } else {
+      final document = {
+        'sender': sender,
+        'time': DateTime.now().toString(),
+        'message': msg
+      };
+      await localServer.update(
+          where.eq('channelName', channel), modify.push('messages', document));
 
-    print('Message Sent Successfully');
+      print('Message Sent Successfully');
+    }
   }
 
   Future showChannelMsg(channel, limitF, User receiverObj, Db db) async {

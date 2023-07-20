@@ -109,8 +109,10 @@ class Channel {
               modify.push('permittedUsers', i));
           permittedUsers.add(i);
         } else {
-          continue;
+          print("$i Is Not Part Of $serverName So Can't Be Permitted.");
         }
+      } else {
+        ProcessError.UserDoesNotExist(i);
       }
     }
   }

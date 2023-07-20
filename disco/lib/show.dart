@@ -56,7 +56,7 @@ void main(List<String> arguments) async {
           await currServer.showCategories(db);
           break;
         default:
-          print("SyntaxError : No such command exists");
+          SyntaxError.noCommand();
       }
     }
   }
