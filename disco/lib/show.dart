@@ -45,14 +45,18 @@ void main(List<String> arguments) async {
       Server currServer = Server();
       await currServer.setServerData(server, db);
 
-      if (arguments[0] == "showMods") {
-        //mods can be seen by non members also
-
-        currServer.showMods();
-      } else if (arguments[0] == "showChannels") {
-        //channels can be seen by non members also
-
-        await currServer.showChannels(db);
+      switch (arguments[0]) {
+        case "showMods":
+          currServer.showMods();
+          break;
+        case "showChannels":
+          await currServer.showChannels(db);
+          break;
+        case "showCategories":
+          await currServer.showCategories(db);
+          break;
+        default:
+          print("SyntaxError : No such command exists");
       }
     }
   }

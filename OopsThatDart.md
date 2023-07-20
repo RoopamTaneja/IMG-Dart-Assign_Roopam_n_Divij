@@ -7,14 +7,16 @@ Time to sharpen your Dart & OOPs skills! Any extra features will give you browni
 
 Feel free to contact in case of any doubts :)
 
-Q) By now you must have tried doing something on the terminal. Maybe it was a `cd` or `git commit -m "msg"`. Ever wondered how to create these wonderful applications (yes they're!)? Now the time is to act upon as the task for the assignment, you guessed it, is to create a Command Line Interface Application. Application on what? You've used discord haven't you? What would be like if you have to type in something specific to send a message?
+`Inspiration of the question: https://github.com/Rapptz/discord.py`
+
+Q) By now you must have tried doing something on the terminal. Maybe it was a `cd` or `git commit -m "msg"`. Ever wondered how to create these wonderful applications (yes they're!)? Now the time is to act upon as the task for the assignment, you guessed it, is to create a Command Line Interface Application. Appication on what? You've used discord haven't you? What would be like if you have to type in something specific to send a message?
 
 ### Make a class based CLI application for Discord. 
 
 This features are compulsory to have in your solution:
 
 - **Register a User:**
-Register(signup) a user with their username, if user is already registered, print `failure`.
+Register(signup) a user with their username. If user is already registered, print `failure`.
 _Input example_: `register 2 user1 user2`
 _Expected output_: `success`
 
@@ -38,8 +40,6 @@ _Expected output_: `join success`
 Adds a channel with or without a category to a given server. Note that server should exist before adding a channel. Category can be null.
 _Input Example:_ `createc server1 category1 text`
 _Output Example:_ `text channel created`
-
-<!-- Inspiration of the question: https://github.com/Rapptz/discord.py -->
 
 - **Send message in channel:**
 A channel belongs to a category in a server, it can be of 5 types, Text, Voice, Stage, Rules, Announcement. Message can only be sent without any permission in Text and Announcement Channels. Other channels require mod access to send a message (Note that mod is a role). Message can only be sent to a channel which exists. 
@@ -72,26 +72,100 @@ category1
 category2
 ```
 
-- **Lock channels for different roles to send messages in channels**
+- **Lock channels for diiferent roles to send messages in channels**
 - **Allow users to DM each other**
 - **Have different channel & server types**
 
 You should keep in mind the following:
 - You can use a storage option of your choice. 
 - Please note that the above examples are for illustrative purposes, you have to come up with your own commands.
-- A modular approach to code the project is expected from y'all.
-- This is a group project, kindly find the parings as below:
-  - G1: Sasmit Aditya, Hardik Narang
-  - G2: Roopam Taneja, Divij Rawal
-  - G3: Radhika Maheshwari, Saurabh Rana
-  - G4: Anshita Jain, Manav Agarwal
-  - G5: Angel Sharma, Abishek Arun
-  - G6: Vanni Prashar, Ayush Shankaram
-  - G7: Saksham Jain, Shashwat Papne
-  - G8: Aditya Chopra, Dhruv
-  - G9: Pulkit Garg, Pranav
-  - G10: Alice, Dhruv Goyal
-  - G11: Utkarsh Sharma, Utsah, Jasleen Kaur
+- A modular approach to code the project is expected from y'all.  
+
+### This is a group project, kindly find the parings as below:  
+
+- [ ] G1: Sasmit Aditya, ~Hardik Narang~ 
+      
+      1st iteration: (Hardik absent)
+      2nd iteration: (Hardik to do individually), changes suggested.
+      
+
+- [ ] G2: Roopam Taneja, Divij Rawal  
+      
+      1st iteration: Present  
+      2nd iteration: Present: changes suggested  
+      3rd iteration: (Roopam Absent), changes suggested.
+      
+- [ ] G3: ~Radhika Maheshwari~, Saurabh Rana (P: 1st iteration)  
+
+      1st iteration: Present  
+      2nd iteration: (Radhika to do individually), changes suggested.
+
+- **!! G4: Anshita Jain, Manav Agarwal**
+      
+      1st iteration: Absent  
+      2nd iteration: Absent
+
+- [ ] G5: Angel Sharma, Abishek Arun 
+      
+      1st iteration: Present
+      2nd iteration: Present, changes suggested.
+      
+- G6: Vanni Prashar, Ayush Shankaram 
+      
+      1st iteration: (Vanni absent, flood effected & Ayush absent)  
+      
+- [ ] G7: Saksham Jain, Shashwat Papne 
+      
+      1st iteration: Absent
+      2nd iteration: Present, lot of work remaining
+      
+- [ ] G8: Aditya Chopra, Dhruv 
+      
+      1st iteration: Present
+      2nd iteration: (Dhruv absent), changes suggested
+      3rd iteration: (Aditya absent), work remaining & changes suggested
+      
+- [ ] G9: ~Pulkit Garg~, Pranav 
+      
+      1st iteration: (Pulkit absent, Flood effected)
+      2nd iteration: (Pulkit to do individually), work remaining & changes suggested
+      
+- [ ] G10: Alice, Dhruv Goyal 
+      
+      1st iteration: (Dhruv absent)
+      2nd iteration: (Alice absent, no status update ??), work remaining & changes suggested.
+      
+- [ ] G11: Utkarsh Sharma, ~Utsah~, ~Jasleen Kaur~ 
+      
+      1st iteration: (Utsah absent)
+      2nd iteration: (Utsah to do individually), changes suggested.
+
+#### New groups formed
+
+`Deadline 22 July, 2023`
+- [ ] G12: Jasleen Kaur  
+      
+      1st iteration: Present
+      2nd iteration: Lot of work remaining & changes suggested
+      
+- [ ] G13: Utsah
+
+      1st iteration: Absent
+      2nd iteration: Present, No progress
+
+`Deadline 26 July, 2023`
+- [ ] G14: Radhika Maheshwari
+- [ ] G15: Hardik Narang
+- [ ] G16: Pulkit Garg
+
+### Scoreboard (in order of ranking)
+| Group | Implementation | Brownie Points | Remarks |
+--- | --- | ---| --- |
+|G2: Roopam Taneja, Divij Rawal |  |  |  |
+|G11: Utkarsh Sharma |  |  |  |
+|G5: Angel Sharma, Abishek Arun |  |  |  |
+|G3 & G1: Saurabh Rana & Sasmit Aditya | |  |  |  |
+|G8: Aditya Chopra, Dhruv |  |  |  |
 
 ### Reference material
 - Code snippet from lecture [here](https://gist.github.com/just-ary27/215b5a387ceef8e8d69273821f827c17).

@@ -1,5 +1,8 @@
+// ignore_for_file: file_names
+
 import 'package:args/args.dart';
 import 'package:disco/models/category.dart';
+import 'package:disco/models/checks.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/errors.dart';
 
@@ -32,8 +35,12 @@ void main(List<String> arguments) async {
     final m = parsed['moderator'] as bool;
     final p = parsed['peasant'] as bool;
 
-    Category newCategory = Category();
-    await newCategory.createCategory(server, category, db, c, m, p);
+    if (await Checks.categoryExists(server, category, db)) {
+      DuplicacyError.CategoryExists(category, server);
+    } else {
+      Category newCategory = Category();
+      await newCategory.createCategory(server, category, db, c, m, p);
+    }
   }
   db.close();
 }

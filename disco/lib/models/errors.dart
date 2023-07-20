@@ -13,8 +13,12 @@ class DuplicacyError {
     print('$_s$server Exists');
   }
 
-  static void ChannelExists(channel) {
-    print('$_s$channel Exists');
+  static void CategoryExists(category, server) {
+    print('$_s$category Already Exists in $server');
+  }
+
+  static void ChannelExists(channel, server) {
+    print('$_s$channel Already Exists in $server');
   }
 
   static void UserInServer(username) {
