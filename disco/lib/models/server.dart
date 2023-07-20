@@ -33,6 +33,7 @@ class Server {
 
   Future setServerData(String sName, Db db) async {
     final server = await findServer(sName, db);
+
     serverName = sName;
     serverID = server['serverID'];
     date = server['dateOfCreation'];

@@ -29,7 +29,7 @@ class Channel {
 
         await categories.update(where.eq('categoryName', category),
             modify.push('channelList', channel));
-        permittedRoles = channelCategory.permitted;
+        permittedRoles = channelCategory.permittedRoles;
       } else {
         ProcessError.CategoryDoesNotExist(category);
       }
@@ -59,6 +59,7 @@ class Channel {
     messages = channelDoc['messages'];
     serverName = server;
     type = channelDoc['type'];
+    channelCreator = channelDoc['channelCreator'];
   }
 
   Future addInChannel(User user, channel, Server server, Db db) async {
@@ -89,7 +90,9 @@ class Channel {
   Future addPermittedMember(userList, db, activeUser) async {
     if (activeUser != channelCreator) {
       ProcessError.ChannelRightsError();
+      return;
     }
+
     Server server = Server();
     server.setServerData(serverName ?? "", db);
 
@@ -103,7 +106,7 @@ class Channel {
         if (await Checks.isServerMember(user, server, db)) {
           var localServer = db.collection(serverName!);
           await localServer.update(where.eq('channelName', channelName),
-              modify.push('permittedMembers', i));
+              modify.push('permittedUsers', i));
           permittedUsers.add(i);
         } else {
           continue;
@@ -124,12 +127,15 @@ class Channel {
     var localServer = db.collection(serverName!);
     await localServer.update(where.eq('channelName', channelName),
         modify.set('permittedRoles', categoryCurr?["permittedRoles"]));
+    await localServer.update(where.eq('channelName', channelName),
+        modify.set('permittedUsers', categoryCurr?["permittedUsers"]));
     var categories = db.collection('$server.categories');
 
     await categories.update(where, modify.pull('channelList', channel),
         multiUpdate: true);
     await categories.update(where.eq('categoryName', category),
         modify.push('channelList', channel));
+    print('Successfully moved $channel to $category');
   }
 
   //private method
@@ -137,7 +143,7 @@ class Channel {
       channel, activeUser, activeUserId, type) {
     final document = {
       'channelName': channel,
-      'creator': activeUser,
+      'channelCreator': activeUser,
       'members': [
         {activeUser: activeUserId}
       ],
