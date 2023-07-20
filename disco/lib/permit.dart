@@ -46,6 +46,7 @@ void main(List<String> arguments) async {
 
         await currChannel.setChannelData(server, channel, db);
         await currChannel.addPermittedMember(userList, db, activeUser);
+        print('Succefully Added User(s)');
       }
     }
   }
