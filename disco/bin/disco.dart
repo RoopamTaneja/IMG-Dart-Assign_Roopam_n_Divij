@@ -12,6 +12,7 @@ import 'package:disco/leave.dart' as leave;
 import 'package:disco/bye.dart' as bye;
 import 'package:disco/permit.dart' as permit;
 import 'package:disco/addCategory.dart' as category;
+import 'package:disco/move.dart' as move;
 
 void main(List<String> arguments) {
   if (arguments.isNotEmpty) {
@@ -62,6 +63,9 @@ void main(List<String> arguments) {
         break;
       case "addCategory":
         category.main(arguments);
+        break;
+      case "move":
+        move.main(arguments);
         break;
       default:
         print("SyntaxError : No such command exists");

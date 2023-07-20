@@ -22,7 +22,7 @@ class Channel {
       [c, m, p, category]) async {
     var localServer = db.collection(server);
     if (category != null) {
-      if (await Checks.categoryExists(category, db)) {
+      if (await Checks.categoryExists(server, category, db)) {
         Category channelCategory =
             await Category.setCategoryData(category, server, db);
         var categories = db.collection('categories');
@@ -110,6 +110,23 @@ class Channel {
         }
       }
     }
+  }
+
+  Future moveToCategory(category, channel, server, db) async {
+    Category cat = Category();
+    final categoryCurr = await cat.findCategory(server, category, db);
+    List categoryChannel = categoryCurr?['channelList'];
+
+    if (categoryChannel.contains(channel)) {
+      ProcessError.ChannelExistsInCategory(category, channel);
+      return;
+    }
+    var localServer = db.collection(serverName!);
+    await localServer.update(where.eq('channelName', channelName),
+        modify.set('permittedRoles', categoryCurr?["permittedRoles"]));
+    var categories = db.collection('$server.categories');
+    return await categories.update(where.eq('categoryName', category),
+        modify.push('channelList', channel));
   }
 
   //private method

@@ -9,8 +9,8 @@ class Category {
   List<Channel> channels = [];
   List<dynamic> permitted = [];
 
-  Future<Map<String, dynamic>?> findCategory(category, Db db) async {
-    var categories = db.collection('categories');
+  Future<Map<String, dynamic>?> findCategory(server, category, Db db) async {
+    var categories = db.collection('$server.categories');
     return await categories.findOne(where.eq('categoryName', category));
   }
 
@@ -31,8 +31,8 @@ class Category {
   Future<void> createCategory(
       String server, String category, Db db, bool c, bool m, bool p) async {
     if (await Checks.serverExists(server, db)) {
-      await db.createCollection('$server:categories');
-      DbCollection categories = db.collection('$server:categories');
+      await db.createCollection('$server.categories');
+      DbCollection categories = db.collection('$server.categories');
       permitted = await Checks.permittedList(c, m, p);
       final document = {
         'categoryName': category,

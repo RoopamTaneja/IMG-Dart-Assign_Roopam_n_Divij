@@ -120,4 +120,8 @@ class ProcessError {
   static void ChannelRightsError() {
     print('$_s You Do Not Have Channel Rights');
   }
+
+  static void ChannelExistsInCategory(category, channel) {
+    print('$_s $channel Exists in $category');
+  }
 }
