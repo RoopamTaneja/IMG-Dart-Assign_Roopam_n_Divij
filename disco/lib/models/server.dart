@@ -106,6 +106,7 @@ class Server {
     }
     var localChannel =
         await localServer.findOne(where.eq('channelName', channel)) ?? {};
+
     List permittedRoles = localChannel['permittedRoles'];
     bool checkInChannel =
         await Checks.isChannelMember(senderObj, channel, this, db);
@@ -119,6 +120,14 @@ class Server {
       ProcessError.ChannelRightsError();
       return;
     } else {
+      if (localChannel['type'] == 'voice') {
+        msg ==
+            "This is a voice blah blah blah blah blah blah blah blah blah blah blah blah blah blah";
+      } else if (localChannel['type'] == 'forum') {
+        msg == 'lets have discussion';
+      } else if (localChannel['type'] == 'stage') {
+        msg = 'we regret everything about this';
+      }
       final document = {
         'sender': sender,
         'time': DateTime.now().toString(),

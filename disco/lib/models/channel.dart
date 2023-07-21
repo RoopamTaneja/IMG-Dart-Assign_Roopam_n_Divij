@@ -21,6 +21,11 @@ class Channel {
   Future createChannel(User creator, channel, type, server, Db db,
       [c, m, p, category]) async {
     var localServer = db.collection(server);
+    if (type == "announcement") {
+      c = true;
+      m = true;
+      p = false;
+    }
     if (category != null) {
       if (await Checks.categoryExists(server, category, db)) {
         Category channelCategory =
