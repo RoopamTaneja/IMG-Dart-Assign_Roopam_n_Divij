@@ -18,7 +18,7 @@ class Channel {
 
   Channel();
 
-  Future createChannel(User creator, channel, type, server, Db db,
+  Future<void> createChannel(User creator, channel, type, server, Db db,
       [c, m, p, category]) async {
     var localServer = db.collection(server);
     if (type != "text" &&

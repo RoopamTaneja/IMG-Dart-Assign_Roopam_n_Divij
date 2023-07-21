@@ -42,11 +42,15 @@ void main(List<String> arguments) async {
         //channel does not exist
         ProcessError.ChannelDoesNotExist(channel);
       } else {
-        Channel currChannel = Channel();
+        if (Checks.isMod(currServer, userObj)) {
+          Channel currChannel = Channel();
 
-        await currChannel.setChannelData(server, channel, db);
-        await currChannel.addPermittedMember(userList, db, activeUser);
-        print('Successfully Added User(s)');
+          await currChannel.setChannelData(server, channel, db);
+          await currChannel.addPermittedMember(userList, db, activeUser);
+          print('Successfully Added User(s)');
+        } else {
+          ProcessError.ChannelRightsError();
+        }
       }
     }
   }
