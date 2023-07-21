@@ -21,7 +21,7 @@ class Channel {
   Future createChannel(User creator, channel, type, server, Db db,
       [c, m, p, category]) async {
     var localServer = db.collection(server);
-    if (type == "announcement") {
+    if (type == "voice" || type == "stage" || type == "rules") {
       c = true;
       m = true;
       p = false;
