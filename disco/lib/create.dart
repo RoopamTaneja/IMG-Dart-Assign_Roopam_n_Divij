@@ -71,16 +71,12 @@ void main(List<String> arguments) async {
       if (serverCurr == null) {
         //no server...so make server and channel
 
-        final res1 = await currServer.createServer(userObj, server, db);
+        await currServer.createServer(userObj, server, db);
 
-        final res2 = await newChannel.createChannel(userObj, channel, type,
-            server, db, creator, moderator, peasant, category);
+        await newChannel.createChannel(userObj, channel, type, server, db,
+            creator, moderator, peasant, category);
 
-        if (res1.isAcknowledged && res2.isAcknowledged) {
-          print('Successfully Created Channel $channel In Server $server');
-        } else {
-          ProcessError.UnsuccessfulProcess();
-        }
+        print('Successfully Created Channel $channel In Server $server');
       } else {
         //there is server, only channel needs to be added
 

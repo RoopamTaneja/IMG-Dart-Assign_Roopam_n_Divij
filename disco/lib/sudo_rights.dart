@@ -5,7 +5,6 @@ import 'package:disco/models/user.dart';
 import 'package:disco/models/server.dart';
 import 'package:disco/models/errors.dart';
 import 'package:disco/models/sudo.dart';
-import 'package:disco/permit.dart' as permit;
 
 void main(List<String> arguments) async {
   final db = await Db.create('mongodb://127.0.0.1:27017/myDB');
@@ -53,9 +52,6 @@ void main(List<String> arguments) async {
           break;
         case 'removeMod':
           await owner.removeMod(username, db);
-          break;
-        case 'permit':
-          permit.main(arguments);
           break;
         default:
           SyntaxError.noCommand();

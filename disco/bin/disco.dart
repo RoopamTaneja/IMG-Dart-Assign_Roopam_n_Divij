@@ -5,6 +5,7 @@ import 'package:disco/create.dart' as create;
 import 'package:disco/join.dart' as join;
 import 'package:disco/show.dart' as show;
 import 'package:disco/mod_rights.dart' as mod;
+import 'package:disco/permit.dart' as permit;
 import 'package:disco/sudo_rights.dart' as sudo;
 import 'package:disco/messages.dart' as messages;
 import 'package:disco/inbox.dart' as inbox;
@@ -43,6 +44,9 @@ void main(List<String> arguments) {
       case "showEntrants":
       case "remove":
         mod.main(arguments);
+        break;
+      case 'permit':
+        permit.main(arguments);
         break;
       case "sudo":
         sudo.main(arguments);

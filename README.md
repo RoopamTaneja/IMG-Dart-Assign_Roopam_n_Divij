@@ -162,14 +162,14 @@ Add one or more of following flags to change default behaviour of messaging righ
 *Options*:<br>
 &emsp;-s, --server : specify server name<br>
 &emsp;-g, --category : specify category name<br>
-&emsp;-u, --users : specify list of server members to be permitted; separate multiple names by '+' (OPTIONAL)<br>
+&emsp;-u, --users : specify list of server members to be permitted; separate multiple names by '+' and enclosed in "" (OPTIONAL)<br>
 *Flags*:<br>
 Add one or more of following flags to give messaging rights to that role in the category being added.<br>
 &emsp;-C, --creator<br>
 &emsp;-M, --moderator<br>
 &emsp;-P, --peasant<br>
 &emsp;(Adding no flags implies all kinds of users can send messages in the channel.)<br>
-&emsp;e.g. `addCategory -s server1 -g cat1 -C -M -u user1+user2`<br><br>
+&emsp;e.g. `addCategory -s server1 -g cat1 -C -M -u "user1+user2"`<br><br>
 
 - `move [OPTIONS]`<br>
 **Usage**: Move an existing channel of a server to a different category<br>
@@ -177,6 +177,13 @@ Add one or more of following flags to give messaging rights to that role in the 
 &emsp;-c, --channel : specify name of channel<br>
 &emsp;-g, --category : specify category name<br>
 &emsp;e.g. `move -s server1 -c ch1 -g cat1`<br><br>
+
+- `permit [OPTIONS]`<br>
+**Usage**: Give messaging rights of a particular channel to specific users<br>
+&emsp;-s, --server : specify name of server<br>
+&emsp;-c, --channel : specify name of channel<br>
+&emsp;-u, --users : specify list of server members to be permitted; separate multiple names by '+' and enclosed in ""<br>
+&emsp;e.g. `permit -s server1 -c ch1 -u "user1+user2+user3"`<br><br>
 
 - `showEntrants [OPTION]`<br>
 **Usage**: Show list of users waiting for approval to join<br>
@@ -199,12 +206,5 @@ Add one or more of following flags to give messaging rights to that role in the 
 &emsp;-u, --username : specify username of moderator<br>
 &emsp;-s, --server : specify name of server<br>
 &emsp;e.g. `sudo -o removeMod -u user1 -s server1`<br><br>
-
-- `permit [OPTIONS]`<br>
-**Usage**: Give messaging rights of a particular channel to specific users<br>
-&emsp;-s, --server : specify name of server<br>
-&emsp;-c, --channel : specify name of channel<br>
-&emsp;-u, --users : specify list of server members to be permitted; separate multiple names by '+'<br>
-&emsp;e.g. `sudo -o permit -s server1 -c ch1 -u user1+user2+user3`<br><br>
 
 ### Enjoy !!!
