@@ -113,7 +113,7 @@ class Channel {
 
     Server server = Server();
     server.setServerData(serverName ?? "", db);
-    print(permittedUsers);
+
     for (String i in userList) {
       if (permittedUsers.contains(i)) {
         continue;

@@ -178,13 +178,6 @@ Add one or more of following flags to give messaging rights to that role in the 
 &emsp;-g, --category : specify category name<br>
 &emsp;e.g. `move -s server1 -c ch1 -g cat1`<br><br>
 
-- `permit [OPTIONS]`<br>
-**Usage**: Give messaging rights of a particular channel to specific users<br>
-&emsp;-s, --server : specify name of server<br>
-&emsp;-c, --channel : specify name of channel<br>
-&emsp;-u, --users : specify list of server members to be permitted; separate multiple names by '+' and enclosed in ""<br>
-&emsp;e.g. `permit -s server1 -c ch1 -u "user1+user2+user3"`<br><br>
-
 - `showEntrants [OPTION]`<br>
 **Usage**: Show list of users waiting for approval to join<br>
 &emsp;-s, --server : specify name of server<br>
@@ -206,5 +199,12 @@ Add one or more of following flags to give messaging rights to that role in the 
 &emsp;-u, --username : specify username of moderator<br>
 &emsp;-s, --server : specify name of server<br>
 &emsp;e.g. `sudo -o removeMod -u user1 -s server1`<br><br>
+
+- `permit [OPTIONS]`<br>
+**Usage**: Give messaging rights of a particular channel to specific users<br>
+&emsp;-s, --server : specify name of server<br>
+&emsp;-c, --channel : specify name of channel<br>
+&emsp;-u, --users : specify list of server members to be permitted; separate multiple names by '+' and enclosed in ""<br>
+&emsp;e.g. `permit -s server1 -c ch1 -u "user1+user2+user3"`<br><br>
 
 ### Enjoy !!!
