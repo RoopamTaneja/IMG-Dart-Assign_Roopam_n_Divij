@@ -77,6 +77,7 @@ class Channel {
     serverName = server;
     type = channelDoc['type'];
     channelCreator = channelDoc['channelCreator'];
+    permittedUsers = channelDoc['permittedUsers'];
   }
 
   Future addInChannel(User user, channel, Server server, Db db) async {
@@ -112,7 +113,7 @@ class Channel {
 
     Server server = Server();
     server.setServerData(serverName ?? "", db);
-
+    print(permittedUsers);
     for (String i in userList) {
       if (permittedUsers.contains(i)) {
         continue;
