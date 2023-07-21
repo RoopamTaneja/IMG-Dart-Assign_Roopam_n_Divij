@@ -110,7 +110,7 @@ You should keep in mind the following:
       1st iteration: Present
       2nd iteration: Present, changes suggested.
       
-- G6: Vanni Prashar, Ayush Shankaram 
+- [ ] G6: Vanni Prashar, Ayush Shankaram 
       
       1st iteration: (Vanni absent, flood effected & Ayush absent)  
       

@@ -2,7 +2,7 @@
 
 # CLI application for Discord
 
-**A Command Line Interface Application project to simulate discord features built solely on Dart.**
+**A Command Line Interface Application project to simulate discord features built solely on Dart (without Flutter).**
 
 *A learning project developed by Divij and Roopam for enhancing understanding of Dart, its packages and OOPs concepts as part of IMG assignment.*<br>
 External Dart packages used : mongo_dart, args, crypto
@@ -48,20 +48,21 @@ dart run
 
 - `create [OPTION(s), FLAG(s)]`<br>
 **Usage**: Create server/ channel within server<br>
-*Options*:
+&emsp;*Options*:<br>
 &emsp;-s, --server : specify name of server to create new server <br>
 &emsp;e.g. `create -s server1`<br>
-&emsp;-c, --channel : specify name of channel to create new channel within new/existing server (OPTIONAL). <br>
+&emsp;-c, --channel : specify name of channel to create new channel within new/existing server (OPTIONAL)<br>
 &emsp;New channel in existing server can be added only by a moderator or creater.<br>
 &emsp;-t, --type : specify type of channel (OPTIONAL)<br>
-*Flags*:
-Add one or more flags to give permission to that role for sending messages in the channel being created.
-&emsp;-C, --creator :
-&emsp;-M, --moderator :
-&emsp;-P, --peasant:
+&emsp;Allowed channel types : text, rules, voice, forum, stage. Default value of channel is text.<br>
+&emsp;**Only mods and creator can send messages in voice, stage or rules channel by default. This can be changed by using flags.**<br>
+&emsp;*Flags*:<br>
+Add one or more of following flags to change default behaviour of messaging rights of channel.<br>
+&emsp;-C, --creator<br>
+&emsp;-M, --moderator<br>
+&emsp;-P, --peasant<br>
 &emsp;e.g. `create -s server1 -c ch1 -t voice -C -M`<br>
-&emsp;e.g. `create -s server1 -c ch1 -t text`<br>
-&emsp;(Adding no flags implies all kinds of users can send messages in the channel.)<br><br>
+&emsp;e.g. `create -s server1 -c ch1 -t text`<br><br>
 
 - `join [OPTION(s)]`<br>
 **Usage**: Join server/ channel within server<br>
@@ -89,6 +90,12 @@ Add one or more flags to give permission to that role for sending messages in th
 &emsp;-s, --server : specify name of server<br>
 &emsp;Can be used even if user is not server member<br>
 &emsp;e.g. `showCategories -s server1`<br><br>
+
+- `showMembers [OPTION]`<br>
+**Usage**: Show list of all members of a server<br>
+&emsp;-s, --server : specify name of server<br>
+&emsp;Can be used only if user is a server member<br>
+&emsp;e.g. `showMembers -s server1`<br><br>
 
 - `showMods [OPTION]`<br>
 **Usage**: Show list of all moderators of a server<br>
@@ -152,8 +159,24 @@ Add one or more flags to give permission to that role for sending messages in th
 
 - `addCategory [OPTIONS, FLAG(s)]`<br>
 **Usage**: Add a new category in a server<br>
+*Options*:<br>
 &emsp;-s, --server : specify server name<br>
 &emsp;-g, --category : specify category name<br>
+&emsp;-u, --users : specify list of server members to be permitted; separate multiple names by '+' (OPTIONAL)<br>
+*Flags*:<br>
+Add one or more of following flags to give messaging rights to that role in the category being added.<br>
+&emsp;-C, --creator<br>
+&emsp;-M, --moderator<br>
+&emsp;-P, --peasant<br>
+&emsp;(Adding no flags implies all kinds of users can send messages in the channel.)<br>
+&emsp;e.g. `addCategory -s server1 -g cat1 -C -M -u user1+user2`<br><br>
+
+- `move [OPTIONS]`<br>
+**Usage**: Move an existing channel of a server to a different category<br>
+&emsp;-s, --server : specify server name<br>
+&emsp;-c, --channel : specify name of channel<br>
+&emsp;-g, --category : specify category name<br>
+&emsp;e.g. `move -s server1 -c ch1 -g cat1`<br><br>
 
 - `showEntrants [OPTION]`<br>
 **Usage**: Show list of users waiting for approval to join<br>
@@ -181,5 +204,7 @@ Add one or more flags to give permission to that role for sending messages in th
 **Usage**: Give messaging rights of a particular channel to specific users<br>
 &emsp;-s, --server : specify name of server<br>
 &emsp;-c, --channel : specify name of channel<br>
-&emsp;-u, --users : specify list of server members to be permitted; separate ,ultipke names by '+'
+&emsp;-u, --users : specify list of server members to be permitted; separate multiple names by '+'<br>
 &emsp;e.g. `sudo -o permit -s server1 -c ch1 -u user1+user2+user3`<br><br>
+
+### Enjoy !!!

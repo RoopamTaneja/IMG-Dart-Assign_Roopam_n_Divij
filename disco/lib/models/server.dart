@@ -90,6 +90,13 @@ class Server {
     }
   }
 
+  Future<void> showMembers(Db db) async {
+    print("List of Members in $serverName : ");
+    for (String i in roles!.keys) {
+      print(i);
+    }
+  }
+
   Future sendMsgInChannel(msg, channel, User senderObj, Db db) async {
     var localServer = db.collection(serverName!);
 
@@ -121,12 +128,11 @@ class Server {
       return;
     } else {
       if (localChannel['type'] == 'voice') {
-        msg ==
-            "This is a voice blah blah blah blah blah blah blah blah blah blah blah blah blah blah";
+        msg = "This is a voice message : $msg";
       } else if (localChannel['type'] == 'forum') {
-        msg == 'lets have discussion';
+        msg = "Discussion: $msg";
       } else if (localChannel['type'] == 'stage') {
-        msg = 'we regret everything about this';
+        msg = "On the stage: $msg";
       }
       final document = {
         'sender': sender,
@@ -217,7 +223,7 @@ class Server {
   }
 
   void showMods() {
-    print('List of moderators : ');
+    print('List of moderators in $serverName : ');
     int count = 0;
     for (String i in roles!.keys) {
       if (roles?[i] == 'moderator') {

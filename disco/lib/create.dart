@@ -101,14 +101,8 @@ void main(List<String> arguments) async {
           } else {
             //channel not present can be added
 
-            final result = await newChannel.createChannel(userObj, channel,
-                type, server, db, creator, moderator, peasant);
-
-            if (result.isAcknowledged) {
-              print('Successfully Created Channel $channel');
-            } else {
-              ProcessError.UnsuccessfulProcess();
-            }
+            await newChannel.createChannel(userObj, channel, type, server, db,
+                creator, moderator, peasant);
           }
         }
       }

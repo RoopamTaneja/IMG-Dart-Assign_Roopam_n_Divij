@@ -39,25 +39,36 @@ void main(List<String> arguments) async {
     bool check = await Checks.serverExists(server, db);
     if (!check) {
       ProcessError.ServerDoesNotExist(server);
-    } else {
-      //server exists
+      await db.close();
+      return;
+    }
 
-      Server currServer = Server();
-      await currServer.setServerData(server, db);
+    //server exists
+    Server currServer = Server();
+    await currServer.setServerData(server, db);
 
-      switch (arguments[0]) {
-        case "showMods":
-          currServer.showMods();
-          break;
-        case "showChannels":
-          await currServer.showChannels(db);
-          break;
-        case "showCategories":
-          await currServer.showCategories(db);
-          break;
-        default:
-          SyntaxError.noCommand();
+    if (arguments[0] == "showMembers") {
+      if ((await Checks.isServerMember(userObj, currServer, db))) {
+        await currServer.showMembers(db);
+      } else {
+        ProcessError.UserNotInServer(userObj.username);
       }
+      await db.close();
+      return;
+    }
+
+    switch (arguments[0]) {
+      case "showMods":
+        currServer.showMods();
+        break;
+      case "showChannels":
+        await currServer.showChannels(db);
+        break;
+      case "showCategories":
+        await currServer.showCategories(db);
+        break;
+      default:
+        SyntaxError.noCommand();
     }
   }
   await db.close();

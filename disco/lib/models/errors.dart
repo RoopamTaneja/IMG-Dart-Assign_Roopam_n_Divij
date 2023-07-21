@@ -128,4 +128,8 @@ class ProcessError {
   static void ChannelExistsInCategory(category, channel) {
     print('$_s $channel Exists in $category');
   }
+
+  static void InvalidType(type) {
+    print('$_s $type Is Not A Valid Type.');
+  }
 }
