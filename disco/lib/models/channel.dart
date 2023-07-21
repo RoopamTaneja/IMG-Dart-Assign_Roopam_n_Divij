@@ -21,6 +21,14 @@ class Channel {
   Future createChannel(User creator, channel, type, server, Db db,
       [c, m, p, category]) async {
     var localServer = db.collection(server);
+    if (type != "text" &&
+        type != "voice" &&
+        type != "rules" &&
+        type != "stage" &&
+        type != "forum") {
+      ProcessError.InvalidType(type);
+      return;
+    }
     if (type == "voice" || type == "stage" || type == "rules") {
       c = true;
       m = true;
@@ -49,7 +57,11 @@ class Channel {
     final result = await localServer
         .insertOne(document..['_id'] = ObjectId().toHexString());
 
-    return result;
+    if (result.isAcknowledged) {
+      print('Successfully Created Channel $channel');
+    } else {
+      ProcessError.UnsuccessfulProcess();
+    }
   }
 
   Future? findChannel(server, channel, Db db) async {
