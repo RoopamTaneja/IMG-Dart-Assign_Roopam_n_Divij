@@ -1,5 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
 class DuplicacyError {
+  //private constructor
+  DuplicacyError._();
+
   static final String _s = "DuplicacyError : ";
   static void UserExists(username) {
     print("$_s$username Already Exists");
@@ -27,6 +30,9 @@ class DuplicacyError {
 }
 
 class PermissionDeniedError {
+  //private constructor
+  PermissionDeniedError._();
+
   static final String _s = "PermissionDenied : ";
   static void ModCreatorRight(server) {
     print('${_s}You Are Not Moderator or Creator of $server');
@@ -34,6 +40,9 @@ class PermissionDeniedError {
 }
 
 class LoginError {
+  //private constructor
+  LoginError._();
+
   static final String _s = "LoginError : ";
   static void NotLoggedIn() {
     print('${_s}No User Logged In');
@@ -41,6 +50,9 @@ class LoginError {
 }
 
 class SyntaxError {
+  //private constructor
+  SyntaxError._();
+
   static final String _s = "SyntaxError : ";
   static void ChannelWithoutServer() {
     print('${_s}Channel without Server Cannot Be Created');
@@ -80,6 +92,9 @@ class SyntaxError {
 }
 
 class ProcessError {
+  //private constructor
+  ProcessError._();
+
   static final String _s = "ProcessError : ";
   static void UnsuccessfulProcess() {
     print('${_s}Unsuccessful Process');

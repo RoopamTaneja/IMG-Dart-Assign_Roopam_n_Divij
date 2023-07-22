@@ -158,15 +158,6 @@ You should keep in mind the following:
 - [ ] G15: Hardik Narang
 - [ ] G16: Pulkit Garg
 
-### Scoreboard (in order of ranking)
-| Group | Implementation | Brownie Points | Remarks |
---- | --- | ---| --- |
-|G2: Roopam Taneja, Divij Rawal |  |  |  |
-|G11: Utkarsh Sharma |  |  |  |
-|G5: Angel Sharma, Abishek Arun |  |  |  |
-|G3 & G1: Saurabh Rana & Sasmit Aditya | |  |  |  |
-|G8: Aditya Chopra, Dhruv |  |  |  |
-
 ### Reference material
 - Code snippet from lecture [here](https://gist.github.com/just-ary27/215b5a387ceef8e8d69273821f827c17).
 - [Article](https://medium.com/flutter/flutter-dont-fear-the-garbage-collector-d69b3ff1ca30) on Garbage collection in Dart & Flutter.

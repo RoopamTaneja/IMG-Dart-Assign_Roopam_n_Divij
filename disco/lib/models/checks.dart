@@ -2,7 +2,12 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:disco/models/user.dart';
 import 'package:disco/models/server.dart';
 
+enum Permitted { creator, moderator, peasant }
+
 class Checks {
+  //private constructor
+  Checks._();
+
   static Future<bool> isValidPassword(String password) async {
     // Define the pattern using a regular expression
     RegExp passwordPattern =
@@ -92,19 +97,26 @@ class Checks {
   static Future<List> permittedList(bool c, bool m, bool p) async {
     List permittedRoles = [];
     if (c) {
-      permittedRoles.add("creator");
+      permittedRoles.add(toString(Permitted.creator));
     }
     if (m) {
-      permittedRoles.add("moderator");
+      permittedRoles.add(toString(Permitted.moderator));
     }
     if (p) {
-      permittedRoles.add("peasant");
+      permittedRoles.add(toString(Permitted.peasant));
     }
     if (!c && !m && !p) {
-      permittedRoles.add("creator");
-      permittedRoles.add("moderator");
-      permittedRoles.add("peasant");
+      permittedRoles.add(toString(Permitted.creator));
+      permittedRoles.add(toString(Permitted.moderator));
+      permittedRoles.add(toString(Permitted.peasant));
     }
     return permittedRoles;
   }
+}
+
+@override
+String toString(val) {
+  String s = '$val';
+  List<String> arr = s.split('.');
+  return arr[1];
 }

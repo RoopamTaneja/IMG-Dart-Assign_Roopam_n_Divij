@@ -29,7 +29,7 @@ dart run
 
 *The application is ready to use. Try various commands prefixed by : `dart .\bin\disco.dart` and enjoy.*<br>
 *For example : `dart .\bin\disco.dart register -u <username>`*<br>
-***Linux users may just prefix ./disco with their commands.***
+***Linux users may just prefix ./disco with their commands (after once doing chmod +x disco).***
 
 ## Commands
 
@@ -183,6 +183,13 @@ Add one or more of following flags to give messaging rights to that role in the 
 &emsp;-s, --server : specify name of server<br>
 &emsp;e.g. `showEntrants -s server1`<br><br>
 
+- `permit [OPTIONS]`<br>
+**Usage**: Give messaging rights of a particular channel to specific users<br>
+&emsp;-s, --server : specify name of server<br>
+&emsp;-c, --channel : specify name of channel<br>
+&emsp;-u, --users : specify list of server members to be permitted; separate multiple names by '+' and enclosed in ""<br>
+&emsp;e.g. `permit -s server1 -c ch1 -u "user1+user2+user3"`<br><br>
+
 ***Commands only accessible to creator***<br><br>
 *Such commands are prefixed by sudo (signifying creator).*<br>
 *Other commands are added under -o, --owner option.*<br>
@@ -199,12 +206,5 @@ Add one or more of following flags to give messaging rights to that role in the 
 &emsp;-u, --username : specify username of moderator<br>
 &emsp;-s, --server : specify name of server<br>
 &emsp;e.g. `sudo -o removeMod -u user1 -s server1`<br><br>
-
-- `permit [OPTIONS]`<br>
-**Usage**: Give messaging rights of a particular channel to specific users<br>
-&emsp;-s, --server : specify name of server<br>
-&emsp;-c, --channel : specify name of channel<br>
-&emsp;-u, --users : specify list of server members to be permitted; separate multiple names by '+' and enclosed in ""<br>
-&emsp;e.g. `permit -s server1 -c ch1 -u "user1+user2+user3"`<br><br>
 
 ### Enjoy !!!
