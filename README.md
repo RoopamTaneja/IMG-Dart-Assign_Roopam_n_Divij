@@ -5,7 +5,7 @@
 **A Command Line Interface Application project to simulate discord features built solely on Dart (without Flutter).**
 
 *A learning project developed by Divij and Roopam for enhancing understanding of Dart, its packages and OOPs concepts as part of IMG assignment.*<br>
-External Dart packages used : mongo_dart, args, crypto
+External Dart packages used : [mongo_dart](https://pub.dev/packages/mongo_dart), [args](https://pub.dev/packages/args), [crypto](https://pub.dev/packages/crypto)
 
 ## Prerequisites
 
