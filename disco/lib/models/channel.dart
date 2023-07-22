@@ -106,11 +106,6 @@ class Channel {
   }
 
   Future addPermittedMember(userList, db, activeUser) async {
-    if (activeUser != channelCreator) {
-      ProcessError.ChannelRightsError();
-      return;
-    }
-
     Server server = Server();
     server.setServerData(serverName ?? "", db);
 
