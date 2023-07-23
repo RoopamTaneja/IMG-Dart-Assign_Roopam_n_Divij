@@ -22,19 +22,19 @@ class User {
   void get getData =>
       print("User details : Username - $username, UserID - $id");
 
-  Future setUserData(String name, Db db) async {
+  Future<void> setUserData(String name, Db db) async {
     final user = await findUser(name, db);
     username = name;
-    id = user['_id'];
+    id = user!['_id'];
     _hash = user['hash'];
   }
 
-  Future? findUser(String username, Db db) async {
+  Future<Map<String, dynamic>?> findUser(String username, Db db) async {
     final userAuth = db.collection('userAuth');
     return await userAuth.findOne(where.eq('username', username));
   }
 
-  Future register(String name, Db db) async {
+  Future<void> register(String name, Db db) async {
     final userAuth = db.collection('userAuth');
     print(
         "Password must satify the following characteristics:\n-> At least one uppercase letter\n-> At least one lowercase letter\n-> At least one digit\n-> Minimum length of 8 characters ");
@@ -73,7 +73,7 @@ class User {
     }
   }
 
-  Future login(username, Db db) async {
+  Future<void> login(username, Db db) async {
     final userSessions = db.collection('userSession');
 
     final user = await findUser(username, db);
@@ -106,7 +106,7 @@ class User {
     }
   }
 
-  Future logout(username, Db db) async {
+  Future<void> logout(username, Db db) async {
     final userSessions = db.collection('userSession');
 
     final user = await findUser(username, db);
@@ -130,7 +130,7 @@ class User {
     }
   }
 
-  Future sendDM(msg, receiver, Db db) async {
+  Future<void> sendDM(msg, receiver, Db db) async {
     final messageDB = db.collection('messages');
 
     if (receiver == username) {
@@ -159,7 +159,7 @@ class User {
     }
   }
 
-  Future showDM(sender, limitF, Db db) async {
+  Future<void> showDM(sender, limitF, Db db) async {
     final messageDB = db.collection('messages');
     final receiver = username;
 
@@ -213,7 +213,7 @@ class User {
     }
   }
 
-  Future deleteAccount(Db db) async {
+  Future<void> deleteAccount(Db db) async {
     final userSessions = db.collection('userSession');
     final users = db.collection('userAuth');
     final servers = db.collection('servers');

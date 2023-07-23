@@ -1,3 +1,5 @@
 #!/bin/bash
+
 dart bin/disco.dart "$@"
+
 #use chmod +x disco and then access using ./disco 
