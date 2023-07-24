@@ -40,7 +40,7 @@ void main(List<String> arguments) async {
     final m = parsed['moderator'] as bool;
     final p = parsed['peasant'] as bool;
     final users = parsed['users'] ?? "";
-    List userList = users.split('+');
+    List<String> userList = users.split('+');
     var activeUser = currentSession['username'];
 
     await currServer.setServerData(server, db);

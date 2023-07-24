@@ -9,12 +9,12 @@ class Channel {
   String? channelName;
   String? serverName;
   String? channelCreator;
-  List<dynamic>? members;
+  List<String>? members;
   String? type;
-  List<dynamic>? messages;
+  List<Map>? messages;
   Category? channelCategory;
-  List<dynamic> permittedRoles = [];
-  List<dynamic> permittedUsers = [];
+  List<String> permittedRoles = [];
+  List<String> permittedUsers = [];
 
   Channel();
 
@@ -50,7 +50,7 @@ class Channel {
       permittedRoles = await Checks.permittedList(c, m, p);
     }
     channelCreator = creator.username;
-    permittedUsers.add(creator.username);
+    permittedUsers.add(creator.username!);
     final document =
         _createChannelDoc(channel, creator.username, creator.id, type);
 

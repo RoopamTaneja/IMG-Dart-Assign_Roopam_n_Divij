@@ -94,8 +94,8 @@ class Checks {
         .isEmpty);
   }
 
-  static Future<List> permittedList(bool c, bool m, bool p) async {
-    List permittedRoles = [];
+  static Future<List<String>> permittedList(bool c, bool m, bool p) async {
+    List<String> permittedRoles = [];
     if (c) {
       permittedRoles.add(toString(Permitted.creator));
     }
