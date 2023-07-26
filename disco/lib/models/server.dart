@@ -26,7 +26,7 @@ class Server {
     inQueue = inQ;
   }
 
-  Future? findServer(String server, Db db) async {
+  Future<Map<dynamic, dynamic>?> findServer(String server, Db db) async {
     final servers = db.collection('servers');
     return await servers.findOne(where.eq('serverName', server));
   }
@@ -35,16 +35,16 @@ class Server {
     final server = await findServer(sName, db);
 
     serverName = sName;
-    serverID = server['serverID'];
-    date = server['dateOfCreation'];
-    creator = server['creator'];
-    userID = server['userID'];
-    roles = server['roles'];
-    allMembers = server['allMembers'];
-    inQueue = server['inQueue'];
+    serverID = server?['serverID'];
+    date = server?['dateOfCreation'];
+    creator = server?['creator'];
+    userID = server?['userID'];
+    roles = server?['roles'];
+    allMembers = server?['allMembers'];
+    inQueue = server?['inQueue'];
   }
 
-  Future createServer(User creator, server, Db db) async {
+  Future<WriteResult> createServer(User creator, server, Db db) async {
     final servers = db.collection('servers');
     final document = _createServerDoc(server, creator.username, creator.id);
 
@@ -55,13 +55,13 @@ class Server {
     return result;
   }
 
-  Future addInQueue(User user, Db db) async {
+  Future<void> addInQueue(User user, Db db) async {
     final servers = db.collection('servers');
     await servers.update(where.eq('serverName', serverName),
         modify.push('inQueue', user.username));
   }
 
-  Future showChannels(Db db) async {
+  Future<void> showChannels(Db db) async {
     final serverCurrent = db.collection(serverName!);
     List channelNames =
         await serverCurrent.find().map((doc) => doc['channelName']).toList();
@@ -97,7 +97,7 @@ class Server {
     }
   }
 
-  Future sendMsgInChannel(msg, channel, User senderObj, Db db) async {
+  Future<void> sendMsgInChannel(msg, channel, User senderObj, Db db) async {
     var localServer = db.collection(serverName!);
 
     var sender = senderObj.username;
@@ -146,7 +146,7 @@ class Server {
     }
   }
 
-  Future showChannelMsg(channel, limitF, User receiverObj, Db db) async {
+  Future<void> showChannelMsg(channel, limitF, User receiverObj, Db db) async {
     var serverDb = db.collection(serverName!);
     var receiver = receiverObj.username;
 
@@ -187,7 +187,7 @@ class Server {
     }
   }
 
-  Future leaveServer(User user, Db db) async {
+  Future<void> leaveServer(User user, Db db) async {
     final servers = db.collection('servers');
     var localServer = db.collection(serverName!);
     List memberList = allMembers!;
