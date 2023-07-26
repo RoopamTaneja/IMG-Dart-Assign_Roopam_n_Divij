@@ -32,16 +32,16 @@ class Server {
   }
 
   Future setServerData(String sName, Db db) async {
-    final server = await findServer(sName, db);
+    final server = await findServer(sName, db) ?? {};
 
     serverName = sName;
-    serverID = server?['serverID'];
-    date = server?['dateOfCreation'];
-    creator = server?['creator'];
-    userID = server?['userID'];
-    roles = server?['roles'];
-    allMembers = server?['allMembers'];
-    inQueue = server?['inQueue'];
+    serverID = server['serverID'];
+    date = server['dateOfCreation'];
+    creator = server['creator'];
+    userID = server['userID'];
+    roles = server['roles'];
+    allMembers = server['allMembers'];
+    inQueue = server['inQueue'];
   }
 
   Future<WriteResult> createServer(User creator, server, Db db) async {

@@ -24,7 +24,7 @@ class Moderator extends User {
     }
   }
 
-  Future admit(username, Db db) async {
+  Future<void> admit(username, Db db) async {
     //dart bin/disco.dart admit -u username -s servername
 
     final servers = db.collection('servers');
@@ -61,7 +61,7 @@ class Moderator extends User {
     }
   }
 
-  Future remove(username, channel, Db db) async {
+  Future<void> remove(username, channel, Db db) async {
     final servers = db.collection('servers');
     final currServer = myServer;
     var serverCurr = db.collection(currServer!.serverName!);
