@@ -9,12 +9,12 @@ class Channel {
   String? channelName;
   String? serverName;
   String? channelCreator;
-  List<dynamic>? members;
+  List<String>? members;
   String? type;
-  List<dynamic>? messages;
+  List<Map>? messages;
   Category? channelCategory;
-  List<dynamic> permittedRoles = [];
-  List<dynamic> permittedUsers = [];
+  List<String> permittedRoles = [];
+  List<String> permittedUsers = [];
 
   Channel();
 
@@ -50,7 +50,7 @@ class Channel {
       permittedRoles = await Checks.permittedList(c, m, p);
     }
     channelCreator = creator.username;
-    permittedUsers.add(creator.username);
+    permittedUsers.add(creator.username!);
     final document =
         _createChannelDoc(channel, creator.username, creator.id, type);
 
@@ -64,7 +64,7 @@ class Channel {
     }
   }
 
-  Future? findChannel(server, channel, Db db) async {
+  Future<Map<String, dynamic>?> findChannel(server, channel, Db db) async {
     var localServer = db.collection(server);
     return await localServer.findOne(where.eq('channelName', channel));
   }
@@ -72,7 +72,7 @@ class Channel {
   Future setChannelData(server, channel, Db db) async {
     final channelDoc = await findChannel(server, channel, db);
     channelName = channel;
-    members = channelDoc['members'];
+    members = channelDoc!['members'];
     messages = channelDoc['messages'];
     serverName = server;
     type = channelDoc['type'];
@@ -80,13 +80,13 @@ class Channel {
     permittedUsers = channelDoc['permittedUsers'];
   }
 
-  Future addInChannel(User user, channel, Server server, Db db) async {
+  Future<void> addInChannel(User user, channel, Server server, Db db) async {
     var localServer = db.collection(server.serverName!);
     await localServer.update(where.eq('channelName', channel),
         modify.push('members', {user.username: user.id}));
   }
 
-  Future leaveChannel(User user, Db db) async {
+  Future<void> leaveChannel(User user, Db db) async {
     var localServer = db.collection(serverName!);
     List memberList = members!;
 
@@ -105,7 +105,7 @@ class Channel {
     print('Successfully Exited from $channelName');
   }
 
-  Future addPermittedMember(userList, db, activeUser) async {
+  Future<void> addPermittedMember(userList, db, activeUser) async {
     Server server = Server();
     server.setServerData(serverName ?? "", db);
 
@@ -130,7 +130,7 @@ class Channel {
     }
   }
 
-  Future moveToCategory(category, channel, server, db) async {
+  Future<void> moveToCategory(category, channel, server, db) async {
     Category cat = Category();
     final categoryCurr = await cat.findCategory(server, category, db);
     List categoryChannel = categoryCurr?['channelList'];

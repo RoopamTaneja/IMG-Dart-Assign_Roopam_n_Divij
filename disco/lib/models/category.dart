@@ -8,8 +8,8 @@ import 'package:disco/models/errors.dart';
 class Category {
   Server? myServer;
   List<Channel> channels = [];
-  List<dynamic> permittedRoles = [];
-  List<dynamic> permittedUsers = [];
+  List<String> permittedRoles = [];
+  List<String> permittedUsers = [];
   Future<Map<String, dynamic>?> findCategory(server, category, Db db) async {
     var categories = db.collection('$server.categories');
     return await categories.findOne(where.eq('categoryName', category));
@@ -23,7 +23,8 @@ class Category {
 
     Server sample = Server();
     await sample.setServerData(server, db);
-    newCategory.myServer = await sample.findServer(server, db);
+    newCategory.myServer = (await sample.findServer(server, db)) as Server?;
+
     newCategory.channels = categoryDoc?['channels'];
     newCategory.permittedRoles = categoryDoc?['permitted'];
     return newCategory;

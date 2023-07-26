@@ -7,7 +7,7 @@ class Sudo extends User {
 
   Sudo();
 
-  Future addMod(username, Db db) async {
+  Future<void> addMod(username, Db db) async {
     final servers = db.collection('servers');
 
     //server exists bcoz i'm its owner
@@ -26,7 +26,7 @@ class Sudo extends User {
     }
   }
 
-  Future removeMod(username, Db db) async {
+  Future<void> removeMod(username, Db db) async {
     final servers = db.collection('servers');
     //server exists bcoz i'm its owner
     var role = myServer?.roles?[username];
