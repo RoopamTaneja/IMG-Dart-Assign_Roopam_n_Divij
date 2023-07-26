@@ -26,7 +26,7 @@ class Server {
     inQueue = inQ;
   }
 
-  Future<Map<String, dynamic>?> findServer(String server, Db db) async {
+  Future<Map<dynamic, dynamic>?> findServer(String server, Db db) async {
     final servers = db.collection('servers');
     return await servers.findOne(where.eq('serverName', server));
   }

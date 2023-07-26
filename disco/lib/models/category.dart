@@ -23,8 +23,7 @@ class Category {
 
     Server sample = Server();
     await sample.setServerData(server, db);
-    newCategory.myServer = (await sample.findServer(server, db)) as Server?;
-
+    newCategory.myServer = sample;
     newCategory.channels = categoryDoc?['channels'];
     newCategory.permittedRoles = categoryDoc?['permitted'];
     return newCategory;
